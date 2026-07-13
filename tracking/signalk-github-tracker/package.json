@@ -1,0 +1,10 @@
+{
+  "name": "signalk-github-tracker",
+  "version": "1.2.0",
+  "description": "Pusht periodiek track (positie/SOG/COG) en dashboard-data (wind/SOG/diepte) vanuit Signal K naar een GitHub-repo (voor de Route du Soleil-website)",
+  "main": "index.js",
+  "keywords": ["signalk-node-server-plugin"],
+  "author": "Kees Royaards",
+  "license": "MIT",
+  "engines": { "node": ">=18" }
+}

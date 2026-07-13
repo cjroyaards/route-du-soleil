@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Zeil mee! — Route du Soleil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Zeil mee!</h1>
+  <p>Twaalf legs van twee weken, elk tussen twee havens met een goed bereikbaar vliegveld. Vlieg naar de start, zeil mee, vlieg terug. Zie je een groen blok? Dan is er plek.</p>
+</header>
+
+<nav>
+  <a href="index.html#live">Waar zijn we?</a>
+  <a href="etappes.html">Etappes</a>
+  <a href="meezeilen.html" class="act">Zeil mee!</a>
+  <a href="index.html#klassement">Klassement</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="index.html#logboek">Logboek</a>
+</nav>
+
+<main>
+
+  <h2>De planning in één oogopslag</h2>
+  <p class="lede">De hele reis maand voor maand, mei–november 2028. Elke kleur is een leg; het cijfer markeert de dag waarop een leg start (en jij dus aan boord komt). Klik op een dag om naar de details van die leg te springen.</p>
+
+  <div class="legend">
+    <span><span class="dot" style="background:var(--vrij)"></span> Plek vrij</span>
+    <span><span class="dot" style="background:#6f8aa3"></span> Bezet</span>
+    <span><span class="dot" style="background:var(--zee)"></span> Ervaren zeezeiler gezocht</span>
+    <span><span class="dot" style="background:#efe9da"></span> Geen vaart</span>
+  </div>
+
+  <div class="cal-wrap"><div id="cal"></div></div>
+
+  <h2>De legs</h2>
+  <p class="lede">Elke leg duurt twee weken en loopt van vliegveld tot vliegveld. Per leg zie je de op- en afstapplaats, de mijlen en hoeveel nachten je op zee zit. Twijfel je wat bij je past? Bel of mail gewoon even.</p>
+
+  <div class="legs-maanden">
+  <section class="maand">
+    <h3 class="maand-kop">Mei <span>2028</span></h3>
+    <div class="legs">
+<!-- LEG 1 -->
+    <div class="leg s-vrij" id="leg1">
+      <div class="top"><h3><span class="nr">Leg 1 · 18 – 31 mei</span>Noordzee &amp; Kanaal</h3><span class="status st-vrij">Plek vrij</span></div>
+      <div class="fly">
+        <div class="ap"><b>Nederland</b><span>thuishaven</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Brest</b><span>BES</span></div>
+        <div class="plane">vliegen vanaf Brest<br>(via Parijs)</div>
+      </div>
+      <div class="feiten"><span>📏 ±350 nm</span><span>🌙 1-2 nachten</span><span>🏖️ Kanaaleilanden onderweg</span></div>
+      <p class="txt">De aftrap: van Nederland het Kanaal over, langs de Kanaaleilanden naar de punt van Bretagne. Mooi zeezeilen met genoeg havens om te schuilen.</p>
+      <a class="btn" href="mailto:cjroyaards@gmail.com?subject=Ik%20wil%20mee%3A%20Leg%201%20%E2%80%94%20Noordzee%20%26%20Kanaal%20(18%E2%80%9331%20mei%202028)&body=Hoi%20Kees%2C%0A%0AIk%20wil%20mee%20op%20Leg%201%20%E2%80%94%20Noordzee%20%26%20Kanaal!%0A%0AMijn%20zeilervaring%3A%20%0ATelefoon%3A%20">Ik wil mee!</a>
+    </div>
+    </div>
+  </section>
+  <section class="maand">
+    <h3 class="maand-kop">Juni <span>2028</span></h3>
+    <div class="legs">
+<!-- LEG 2 ROB -->
+    <div class="leg s-bezet" id="leg2">
+      <div class="top"><h3><span class="nr">Leg 2 · 1 – 14 juni</span>Golf van Biskaje</h3><span class="status st-bezet">Gereserveerd</span></div>
+      <div class="fly">
+        <div class="ap"><b>Brest</b><span>BES</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Santiago</b><span>SCQ</span></div>
+        <div class="plane">in: Brest<br>uit: Santiago</div>
+      </div>
+      <div class="feiten"><span>📏 ±360 nm + Rías</span><span>🌙 2-3 nachten non-stop</span><span>🌊 open oceaan</span></div>
+      <p class="txt">Dé klassieker: drie dagen non-stop over de beruchte Golf van Biskaje, daarna uitrusten in de Spaanse Rías. Wachtlopen, dolfijnen, een onvergetelijke landfall.</p>
+      <span class="vol">Deze leg is gereserveerd — staat vast</span>
+    </div>
+<!-- LEG 3 MICHIEL -->
+    <div class="leg s-bezet" id="leg3">
+      <div class="top"><h3><span class="nr">Leg 3 · 15 – 28 juni</span>De oceaan op naar Madeira</h3><span class="status st-bezet">Gereserveerd</span></div>
+      <div class="fly">
+        <div class="ap"><b>Porto</b><span>OPO</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Funchal</b><span>FNC</span></div>
+        <div class="plane">in: Porto/Vigo<br>uit: Funchal</div>
+      </div>
+      <div class="feiten"><span>📏 ±700 nm</span><span>🌙 4-5 nachten oceaan</span><span>🌊 grootste oversteek</span></div>
+      <p class="txt">Eerst surfen op de Portugese noordenwind langs Lissabon, dan vijf dagen open Atlantische Oceaan naar Madeira. De grootste oversteek van de reis.</p>
+      <span class="vol">Deze leg is gereserveerd — staat vast</span>
+    </div>
+    </div>
+  </section>
+  <section class="maand">
+    <h3 class="maand-kop">Juli <span>2028</span></h3>
+    <div class="legs">
+<!-- LEG 4 -->
+    <div class="leg s-vrij" id="leg4">
+      <div class="top"><h3><span class="nr">Leg 4 · 29 juni – 12 juli</span>Madeira &amp; naar de Canarias</h3><span class="status st-vrij">Plek vrij</span></div>
+      <div class="fly">
+        <div class="ap"><b>Funchal</b><span>FNC</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Lanzarote</b><span>ACE</span></div>
+        <div class="plane">beide direct<br>vanaf Amsterdam</div>
+      </div>
+      <div class="feiten"><span>📏 ±300 nm</span><span>🌙 1-2 nachten (passage)</span><span>🏖️ veel vakantie</span><span>🐦 optie: Selvagens</span></div>
+      <p class="txt">Levada-wandelingen op het bloemeneiland Madeira, dan een passage naar het vulkanische Lanzarote. Directe vluchten aan beide kanten — makkelijk in te plannen. <strong>Optioneel onderweg:</strong> een stop bij de afgelegen Selvagens-eilanden, een streng beschermd natuurreservaat halverwege naar de Canarias (vergunning vooraf nodig bij het natuurpark van Madeira).</p>
+      <a class="btn" href="mailto:cjroyaards@gmail.com?subject=Ik%20wil%20mee%3A%20Leg%204%20%E2%80%94%20Madeira%20%26%20Canarias%20(29%20juni%E2%80%9312%20juli%202028)&body=Hoi%20Kees%2C%0A%0AIk%20wil%20mee%20op%20Leg%204!%0A%0AMijn%20zeilervaring%3A%20%0ATelefoon%3A%20">Ik wil mee!</a>
+    </div>
+<!-- LEG 5 -->
+    <div class="leg s-vrij" id="leg5">
+      <div class="top"><h3><span class="nr">Leg 5 · 13 – 26 juli</span>Canarisch eilandhoppen</h3><span class="status st-vrij">Plek vrij</span></div>
+      <div class="fly">
+        <div class="ap"><b>Lanzarote</b><span>ACE</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Las Palmas</b><span>LPA</span></div>
+        <div class="plane">beide direct<br>vanaf Amsterdam</div>
+      </div>
+      <div class="feiten"><span>📏 dag- &amp; korte tochten</span><span>🌙 0-1</span><span>🏖️ puur vakantie</span></div>
+      <p class="txt">Van Lanzarote via Fuerteventura naar Gran Canaria: korte hops, ankerbaaien, zwemmen en zon. Geen nachtwachten — ideaal als familieblok of voor een eerste keer mee.</p>
+      <a class="btn" href="mailto:cjroyaards@gmail.com?subject=Ik%20wil%20mee%3A%20Leg%205%20%E2%80%94%20Canarisch%20eilandhoppen%20(13%E2%80%9326%20juli%202028)&body=Hoi%20Kees%2C%0A%0AIk%20wil%20mee%20op%20Leg%205!%0A%0AMet%20hoeveel%20personen%3A%20%0ATelefoon%3A%20">Ik wil mee!</a>
+    </div>
+    </div>
+  </section>
+  <section class="maand">
+    <h3 class="maand-kop">Augustus <span>2028</span></h3>
+    <div class="legs">
+<!-- LEG 6 -->
+    <div class="leg s-zee" id="leg6">
+      <div class="top"><h3><span class="nr">Leg 6 · 27 juli – 9 aug</span>Oversteek naar Afrika</h3><span class="status st-zee">Zeezeiler gezocht</span></div>
+      <div class="fly">
+        <div class="ap"><b>Las Palmas</b><span>LPA</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Marrakesh</b><span>RAK</span></div>
+        <div class="plane">in: Las Palmas<br>uit: Marrakesh</div>
+      </div>
+      <div class="feiten"><span>📏 ±400 nm</span><span>🌙 2 nachten + kustrakken</span><span>🌊 avontuur</span></div>
+      <p class="txt">225 mijl open oceaan naar een ander continent, dan de Atlantische kust van Marokko: passaatwind, deining, vissershavens als Agadir en Safi waar nooit jachten komen. Voor onverschrokken zeezeilers.</p>
+      <p class="voorbehoud">Onverschrokken partner mag mee — de ruime dubbele voorpunt is dan van jullie.</p>
+      <a class="btn zee" href="mailto:cjroyaards@gmail.com?subject=Ik%20durf%3A%20Leg%206%20%E2%80%94%20Oversteek%20Afrika%20(27%20juli%E2%80%939%20aug%202028)&body=Hoi%20Kees%2C%0A%0AIk%20wil%20mee%20op%20Leg%206%20naar%20Marokko!%0A%0AMijn%20offshore-ervaring%3A%20%0ATelefoon%3A%20">Ik durf!</a>
+    </div>
+<!-- LEG 7 -->
+    <div class="leg s-zee" id="leg7">
+      <div class="top"><h3><span class="nr">Leg 7 · 10 – 23 aug</span>Marokko → Gibraltar</h3><span class="status st-zee">Zeezeiler gezocht</span></div>
+      <div class="fly">
+        <div class="ap"><b>Marrakesh</b><span>RAK</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Málaga</b><span>AGP</span></div>
+        <div class="plane">in: Marrakesh<br>uit: Málaga</div>
+      </div>
+      <div class="feiten"><span>📏 ±330 nm</span><span>🌙 1-2 nachten</span><span>🌊 Straat van Gibraltar</span></div>
+      <p class="txt">Langs Casablanca en Rabat naar Tanger, dan met de stroom mee door de Straat van Gibraltar de Middellandse Zee op. Atlantische deining, weinig uitwijkhavens — ervaring vereist.</p>
+      <p class="voorbehoud">Onverschrokken partner mag mee — de ruime dubbele voorpunt is dan van jullie.</p>
+      <a class="btn zee" href="mailto:cjroyaards@gmail.com?subject=Ik%20durf%3A%20Leg%207%20%E2%80%94%20Marokko%20%E2%86%92%20Gibraltar%20(10%E2%80%9323%20aug%202028)&body=Hoi%20Kees%2C%0A%0AIk%20wil%20mee%20op%20Leg%207!%0A%0AMijn%20offshore-ervaring%3A%20%0ATelefoon%3A%20">Ik durf!</a>
+    </div>
+<!-- LEG 8 -->
+    <div class="leg s-vrij" id="leg8">
+      <div class="top"><h3><span class="nr">Leg 8 · 24 aug – 6 sep</span>Gibraltar → Balearen</h3><span class="status st-vrij">Plek vrij</span></div>
+      <div class="fly">
+        <div class="ap"><b>Málaga</b><span>AGP</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Palma</b><span>PMI</span></div>
+        <div class="plane">beide direct<br>vanaf Amsterdam</div>
+      </div>
+      <div class="feiten"><span>📏 ±450 nm</span><span>🌙 2 nachten</span><span>🏖️ Spaanse zuidkust</span></div>
+      <p class="txt">Vanaf de Costa del Sol in twee nachten naar de Balearen. Stevige maar haalbare leg met een mooie eindbestemming: aankomst onder de kathedraal van Palma.</p>
+      <a class="btn" href="mailto:cjroyaards@gmail.com?subject=Ik%20wil%20mee%3A%20Leg%208%20%E2%80%94%20Gibraltar%20%E2%86%92%20Balearen%20(24%20aug%E2%80%936%20sep%202028)&body=Hoi%20Kees%2C%0A%0AIk%20wil%20mee%20op%20Leg%208!%0A%0AMijn%20zeilervaring%3A%20%0ATelefoon%3A%20">Ik wil mee!</a>
+    </div>
+    </div>
+  </section>
+  <section class="maand">
+    <h3 class="maand-kop">September <span>2028</span></h3>
+    <div class="legs">
+<!-- LEG 9 -->
+    <div class="leg s-vrij" id="leg9">
+      <div class="top"><h3><span class="nr">Leg 9 · 7 – 20 sep</span>Balearen eilandhoppen</h3><span class="status st-vrij">Plek vrij</span></div>
+      <div class="fly">
+        <div class="ap"><b>Palma</b><span>PMI</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Palma</b><span>PMI</span></div>
+        <div class="plane">in &amp; uit Palma<br>(zeer makkelijk)</div>
+      </div>
+      <div class="feiten"><span>📏 dagtochten</span><span>🌙 0</span><span>🏖️ ultieme vakantie</span></div>
+      <p class="txt">Het ultieme vakantieblok: Mallorca, Ibiza en Menorca, elke dag een nieuwe baai, zwemmen van de boot, 's avonds een terras. Geen zeilervaring nodig — alleen zin.</p>
+      <a class="btn" href="mailto:cjroyaards@gmail.com?subject=Ik%20wil%20mee%3A%20Leg%209%20%E2%80%94%20Balearen%20(7%E2%80%9320%20sep%202028)&body=Hoi%20Kees%2C%0A%0AIk%20wil%20mee%20op%20Leg%209%20%E2%80%94%20Balearen!%0A%0AMet%20hoeveel%20personen%3A%20%0ATelefoon%3A%20">Ik wil mee!</a>
+    </div>
+<!-- LEG 10 -->
+    <div class="leg s-vrij" id="leg10">
+      <div class="top"><h3><span class="nr">Leg 10 · 21 sep – 4 okt</span>Mallorca → Sardinië → Corsica</h3><span class="status st-vrij">Plek vrij</span></div>
+      <div class="fly">
+        <div class="ap"><b>Palma</b><span>PMI</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Olbia/Calvi</b><span>OLB/CLY</span></div>
+        <div class="plane">in: Palma<br>uit: Sardinië/Corsica</div>
+      </div>
+      <div class="feiten"><span>📏 ±450 nm</span><span>🌙 2 nachten (oversteek)</span><span>🏖️ mooiste Med-kusten</span></div>
+      <p class="txt">Oversteek naar het Italiaanse zeilwalhalla: flamingo's in de lagune van Cagliari, dan langs de Costa Smeralda omhoog naar Corsica. Eén oversteek, voor de rest genieten.</p>
+      <a class="btn" href="mailto:cjroyaards@gmail.com?subject=Ik%20wil%20mee%3A%20Leg%2010%20%E2%80%94%20Sardini%C3%AB%20%26%20Corsica%20(21%20sep%E2%80%934%20okt%202028)&body=Hoi%20Kees%2C%0A%0AIk%20wil%20mee%20op%20Leg%2010!%0A%0AMijn%20zeilervaring%3A%20%0ATelefoon%3A%20">Ik wil mee!</a>
+    </div>
+    </div>
+  </section>
+  <section class="maand">
+    <h3 class="maand-kop">Oktober – november <span>2028</span></h3>
+    <div class="legs">
+<!-- LEG 11 -->
+    <div class="leg s-vrij" id="leg11">
+      <div class="top"><h3><span class="nr">Leg 11 · 5 – 18 okt</span>Corsica → Côte d'Azur</h3><span class="status st-vrij">Plek vrij</span></div>
+      <div class="fly">
+        <div class="ap"><b>Bastia</b><span>BIA</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Nice</b><span>NCE</span></div>
+        <div class="plane">in: Corsica<br>uit: Nice (direct)</div>
+      </div>
+      <div class="feiten"><span>📏 ±150 nm</span><span>🌙 1 nacht (oversteek)</span><span>🏖️ nazomer-Med</span></div>
+      <p class="txt">Rond Corsica's citadelstadjes, dan de oversteek naar het vasteland en aankomst tussen de masten van Saint-Tropez in nazomerlicht. Rustig zeilen met een glamoureus randje.</p>
+      <a class="btn" href="mailto:cjroyaards@gmail.com?subject=Ik%20wil%20mee%3A%20Leg%2011%20%E2%80%94%20Corsica%20%E2%86%92%20C%C3%B4te%20d'Azur%20(5%E2%80%9318%20okt%202028)&body=Hoi%20Kees%2C%0A%0AIk%20wil%20mee%20op%20Leg%2011!%0A%0AMijn%20zeilervaring%3A%20%0ATelefoon%3A%20">Ik wil mee!</a>
+    </div>
+<!-- LEG 12 -->
+    <div class="leg s-vrij" id="leg12">
+      <div class="top"><h3><span class="nr">Leg 12 · 19 okt – 2 nov</span>Riviera-finale</h3><span class="status st-vrij">Plek vrij</span></div>
+      <div class="fly">
+        <div class="ap"><b>Nice</b><span>NCE</span></div>
+        <div class="arr">→</div>
+        <div class="ap"><b>Montpellier</b><span>MPL</span></div>
+        <div class="plane">in: Nice (direct)<br>uit: Montpellier/Marseille</div>
+      </div>
+      <div class="feiten"><span>📏 ±120 nm</span><span>🌙 0 — dagtochten</span><span>🏁 eindhaven</span></div>
+      <p class="txt">Het slotakkoord: in korte dagtochten langs de Côte d'Azur en de Camargue naar de eindhaven La Grande-Motte, waar de Vindö op de vrachtwagen naar huis gaat. Wie vaart de laatste mijlen mee?</p>
+      <a class="btn" href="mailto:cjroyaards@gmail.com?subject=Ik%20wil%20mee%3A%20Leg%2012%20%E2%80%94%20Riviera-finale%20(19%20okt%E2%80%932%20nov%202028)&body=Hoi%20Kees%2C%0A%0AIk%20wil%20de%20laatste%20mijlen%20meevaren!%0A%0ATelefoon%3A%20">Ik wil mee!</a>
+    </div>
+    </div>
+  </section>
+</div>
+
+  <div class="uitleg"><strong>Hoe werkt het?</strong> Druk op de knop — er opent een mailtje aan Kees. Vermeld je zeilervaring en telefoonnummer, dan plannen we samen. Boek je vlucht pas na bevestiging; via de live-kaart op deze site zie je tegen die tijd of we op schema liggen. Aan boord zijn 4 slaapplaatsen (plek voor 2-3 opstappers per leg). Onverschrokken partners zijn welkom op de oversteken en krijgen de ruime dubbele voorpunt tot hun beschikking.</div>
+
+</main>
+
+<footer>
+  <p><strong>Route du Soleil 2028</strong> · Vragen? <a href="mailto:cjroyaards@gmail.com">Mail Kees</a></p>
+</footer>
+
+<script>
+  // ---- Week-kalender ----
+  const VRIJ='#1faa6b', BEZET='#6f8aa3', ZEE='#f0833a';
+  const D=(m,dag)=>new Date(2028,m-1,dag);
+  const legs=[
+    {id:'leg1', n:1,  naam:'Noordzee & Kanaal',     a:D(5,18), b:D(5,31), s:VRIJ, port:'start NL'},
+    {id:'leg2', n:2,  naam:'Biskaje',         a:D(6,1),  b:D(6,14), s:BEZET,port:'op: Brest'},
+    {id:'leg3', n:3,  naam:'Madeira',     a:D(6,15), b:D(6,28), s:BEZET,port:'op: Porto'},
+    {id:'leg4', n:4,  naam:'Madeira & Canarias',    a:D(6,29), b:D(7,12), s:VRIJ, port:'op: Funchal'},
+    {id:'leg5', n:5,  naam:'Canarisch eilandhoppen',a:D(7,13), b:D(7,26), s:VRIJ, port:'op: Lanzarote'},
+    {id:'leg6', n:6,  naam:'Oversteek naar Afrika', a:D(7,27), b:D(8,9),  s:ZEE,  port:'op: Las Palmas'},
+    {id:'leg7', n:7,  naam:'Marokko → Gibraltar',   a:D(8,10), b:D(8,23), s:ZEE,  port:'op: Marrakesh'},
+    {id:'leg8', n:8,  naam:'Gibraltar → Balearen',  a:D(8,24), b:D(9,6),  s:VRIJ, port:'op: Málaga'},
+    {id:'leg9', n:9,  naam:'Balearen eilandhoppen', a:D(9,7),  b:D(9,20), s:VRIJ, port:'op: Palma'},
+    {id:'leg10',n:10, naam:'Sardinië & Corsica',    a:D(9,21), b:D(10,4), s:VRIJ, port:'op: Palma'},
+    {id:'leg11',n:11, naam:'Corsica → Côte d\'Azur',a:D(10,5), b:D(10,18),s:VRIJ, port:'op: Bastia'},
+    {id:'leg12',n:12, naam:'Riviera-finale',        a:D(10,19),b:D(11,2), s:VRIJ, port:'op: Nice'}
+  ];
+  const MNDvol=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+  const WD=['ma','di','wo','do','vr','za','zo'];
+  const sameDay=(x,y)=>x.getFullYear()==y.getFullYear()&&x.getMonth()==y.getMonth()&&x.getDate()==y.getDate();
+  const legOf=dt=>legs.find(L=>dt>=L.a&&dt<=L.b);
+
+  // één maandblok (echte wandkalender), maand 0-based
+  function maandBlok(jaar,maand){
+    const eerste=new Date(jaar,maand,1);
+    const dagen=new Date(jaar,maand+1,0).getDate();
+    const offset=(eerste.getDay()+6)%7;               // ma=0
+    let h='<div class="cal-month"><h4 class="cal-mh">'+MNDvol[maand]+' '+jaar+'</h4><div class="cal-mgrid">';
+    WD.forEach(w=>h+='<div class="cal-h">'+w+'</div>');
+    for(let i=0;i<offset;i++) h+='<div class="cal-pad"></div>';
+    for(let d=1;d<=dagen;d++){
+      const dt=new Date(jaar,maand,d);
+      const L=legOf(dt);
+      if(!L){
+        h+='<div class="cal-d empty">'+d+'</div>';
+      }else{
+        const embark=sameDay(dt,L.a);
+        h+='<div class="cal-d" style="background:'+L.s+'" '
+          +'title="Leg '+L.n+' — '+L.naam+(embark?' ('+L.port+')':'')+'" '
+          +'onclick="document.getElementById(\''+L.id+'\').scrollIntoView({behavior:\'smooth\',block:\'center\'})">'
+          +d+(embark?'<span class="emb">'+L.n+'</span>':'')
+          +'</div>';
+      }
+    }
+    h+='</div></div>';
+    return h;
+  }
+
+  let html='<div class="cal-months">';
+  for(const m of [4,5,6,7,8,9,10]) html+=maandBlok(2028,m);   // mei t/m november
+  html+='</div>';
+  document.getElementById('cal').innerHTML=html;
+</script>
+</body>
+</html>

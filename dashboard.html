@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Dashboard — Route du Soleil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+.dash-note{margin-bottom:30px}
+#miniMap{height:300px;border-radius:12px;z-index:0}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Live dashboard</h1>
+  <p><span class="pulse"></span>Boordinstrumenten via Signal K · laatste 48 uur · update <span id="upd">—</span></p>
+</header>
+
+<nav>
+  <a href="index.html#live">Waar zijn we?</a>
+  <a href="etappes.html">Etappes</a>
+  <a href="meezeilen.html">Zeil mee!</a>
+  <a href="index.html#route">Opstapschema</a>
+  <a href="index.html#klassement">Klassement</a>
+  <a href="dashboard.html" class="act">Dashboard</a>
+  <a href="index.html#logboek">Logboek</a>
+</nav>
+
+<main>
+  <div class="now">
+    <div class="tile"><div class="v" id="n-sog">—<small> kn</small></div><div class="l">Snelheid (SOG)</div></div>
+    <div class="tile"><div class="v" id="n-cog">—<small>°</small></div><div class="l">Koers (COG)</div></div>
+    <div class="tile"><div class="v" id="n-wind">—<small> kn</small></div><div class="l">Ware wind</div></div>
+    <div class="tile"><div class="v" id="n-gust">—<small> kn</small></div><div class="l">Vlagen</div></div>
+    <div class="tile"><div class="v" id="n-depth">—<small> m</small></div><div class="l">Diepte</div></div>
+    <div class="tile"><div class="v" id="n-log">—<small> nm</small></div><div class="l">Log vandaag</div></div>
+  </div>
+
+  <div class="demo-note dash-note"><strong>Demo-modus.</strong> Deze grafieken tonen gesimuleerde data (passage Lissabon → Madeira). Straks: Signal K op de Cerbo GX logt elke minuut wind/snelheid/diepte en publiceert via Starlink een <code>data.json</code>; dit dashboard leest dat bestand. Diepte valt weg zodra de oceaan dieper is dan het bereik van de dieptemeter — dat is normaal.</div>
+
+  <div class="chart-card">
+    <h2>Huidige positie</h2>
+    <div class="sub">ingezoomd · <a href="index.html#live">volledige kaart →</a></div>
+    <div id="miniMap"></div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Ware wind</h2>
+    <div class="sub">knopen · gemiddeld en vlagen</div>
+    <div class="ch"><canvas id="cWind"></canvas></div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Snelheid over de grond</h2>
+    <div class="sub">knopen (SOG via GPS)</div>
+    <div class="ch"><canvas id="cSpeed"></canvas></div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Diepte</h2>
+    <div class="sub">meters onder transducer · geen meting = buiten bereik (open oceaan)</div>
+    <div class="ch"><canvas id="cDepth"></canvas></div>
+  </div>
+</main>
+
+<footer><strong>Route du Soleil 2028</strong> · data: NMEA 2000 → Actisense → Signal K → deze pagina</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  // ============================================================
+  // Vul hier de raw-URL van data.json in zodra de plugin draait:
+  // const DATA_URL = 'https://raw.githubusercontent.com/JOUWNAAM/route-du-soleil/main/data/data.json';
+  // Leeg = demo-modus.
+  // ============================================================
+  const DATA_URL = 'https://raw.githubusercontent.com/cjroyaards/route-du-soleil/main/data/data.json';
+  const TRACK_URL = 'https://raw.githubusercontent.com/cjroyaards/route-du-soleil/main/data/track.json';
+
+  // ---- mini-kaart huidige positie ----
+  let mini=null, miniBoat=null, miniTrail=null;
+  function toonMiniMap(lat,lon,sog,cog,trail){
+    if(!window.L) return;
+    if(!mini){
+      mini=L.map('miniMap',{zoomControl:true,attributionControl:false}).setView([lat,lon],13);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(mini);
+    }
+    if(miniTrail) mini.removeLayer(miniTrail);
+    if(trail && trail.length>1){
+      miniTrail=L.polyline(trail,{color:'#e8a13d',weight:3,opacity:.9}).addTo(mini);
+    }
+    if(miniBoat) mini.removeLayer(miniBoat);
+    miniBoat=L.marker([lat,lon],{icon:L.divIcon({html:'<div style="font-size:24px">⛵</div>',className:'',iconSize:[28,28],iconAnchor:[14,14]})})
+      .addTo(mini)
+      .bindPopup('<b>Pieternel</b><br>'+(sog!=null?String(sog).replace('.',',')+' kn':'—')+(cog!=null?' · '+Math.round(cog)+'°':''));
+    mini.setView([lat,lon],mini.getZoom());
+  }
+  async function laadMiniMap(){
+    try{
+      const r=await fetch(TRACK_URL+'?t='+Date.now(),{cache:'no-store'});
+      if(!r.ok) return;
+      const d=await r.json();
+      const pts=d.points||[];
+      if(!pts.length) return;
+      const last=pts[pts.length-1];
+      // staartje: laatste 12 punten (~2 uur varen)
+      toonMiniMap(last[0],last[1],last[3],last[4],pts.slice(-12).map(p=>[p[0],p[1]]));
+    }catch(e){ console.warn('mini-kaart:',e); }
+  }
+
+  const f1=v=>v.toFixed(1).replace('.',',');
+  const charts={};
+
+  function setTiles(sog,cog,wind,gust,depth,logNm,updLabel){
+    const set=(id,html)=>{document.getElementById(id).innerHTML=html;};
+    set('n-sog',  sog==null  ? '—<small> kn</small>' : f1(sog)+'<small> kn</small>');
+    set('n-cog',  cog==null  ? '—<small>°</small>'   : Math.round(cog)+'<small>°</small>');
+    set('n-wind', wind==null ? '—<small> kn</small>' : f1(wind)+'<small> kn</small>');
+    set('n-gust', gust==null ? '—<small> kn</small>' : f1(gust)+'<small> kn</small>');
+    set('n-depth',depth==null? '—<small> (oceaan)</small>' : f1(depth)+'<small> m</small>');
+    set('n-log',  logNm==null? '—<small> nm</small>' : Math.round(logNm)+'<small> nm</small>');
+    document.getElementById('upd').textContent=updLabel;
+  }
+
+  function drawCharts(lbl,wind,gust,sog,depth){
+    if(!window.Chart){
+      document.querySelectorAll('.ch').forEach(el=>{
+        el.innerHTML='<p style="font-family:Arial;color:#8a6a2f;padding:30px 10px">Grafieken-library (Chart.js) kon niet laden — controleer de internetverbinding en ververs de pagina.</p>';
+      });
+      return;
+    }
+    const css=getComputedStyle(document.documentElement);
+    const NAVY=css.getPropertyValue('--navy2').trim(), SEA=css.getPropertyValue('--sea').trim();
+    Chart.defaults.font.family='Arial';
+    Chart.defaults.color='#6b7a8a';
+
+    const xOpts={ticks:{maxTicksLimit:8,maxRotation:0},grid:{display:false}};
+    const mk=(id,datasets,yTitle,reverse=false)=>{
+      if(charts[id]) charts[id].destroy();
+      charts[id]=new Chart(document.getElementById(id),{
+        type:'line',
+        data:{labels:lbl,datasets},
+        options:{
+          maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},
+          plugins:{legend:{display:datasets.length>1,labels:{boxWidth:18}}},
+          scales:{x:xOpts,y:{title:{display:true,text:yTitle},reverse,beginAtZero:!reverse}},
+          elements:{point:{radius:0},line:{borderWidth:2,tension:0.3}}
+        }
+      });
+    };
+    mk('cWind',[
+      {label:'Vlagen',data:gust,borderColor:'rgba(232,161,61,.55)',backgroundColor:'rgba(232,161,61,.12)',fill:true,spanGaps:true},
+      {label:'Ware wind',data:wind,borderColor:NAVY,backgroundColor:'rgba(22,57,92,.08)',fill:true,spanGaps:true}
+    ],'knopen');
+    mk('cSpeed',[{label:'SOG',data:sog,borderColor:SEA,backgroundColor:'rgba(42,111,151,.12)',fill:true,spanGaps:true}],'knopen');
+    mk('cDepth',[{label:'Diepte',data:depth,borderColor:NAVY,backgroundColor:'rgba(22,57,92,.10)',fill:true,spanGaps:false}],'meter (omgekeerd)',true);
+  }
+
+  // ---- Echte data uit data.json ----
+  // recent: per 5 min [tijd, sog, wind, vlaag, richting°, diepte, cog°]
+  function renderReal(data){
+    const rec=data.recent||[];
+    if(!rec.length) return false;
+
+    const lbl=rec.map(r=>new Date(r[0]).toLocaleString('nl-NL',{weekday:'short',hour:'2-digit',minute:'2-digit'}));
+    const sog=rec.map(r=>r[1]), wind=rec.map(r=>r[2]), gust=rec.map(r=>r[3]), depth=rec.map(r=>r[5]);
+
+    // log vandaag: sog (kn) * tijdsduur per record (uit de timestamps, max 10 min)
+    const today=new Date(); today.setHours(0,0,0,0);
+    let logNm=0;
+    rec.forEach((r,i)=>{
+      if(new Date(r[0])<today || r[1]==null) return;
+      const dtH = i>0 ? Math.min(10/60,(new Date(r[0])-new Date(rec[i-1][0]))/3600000) : 5/60;
+      logNm += r[1]*dtH;
+    });
+
+    const last=rec[rec.length-1];
+    const updLabel=new Date(data.updated||last[0]).toLocaleString('nl-NL',{weekday:'short',hour:'2-digit',minute:'2-digit'});
+    setTiles(last[1],last[6],last[2],last[3],last[5],logNm,updLabel);
+    drawCharts(lbl,wind,gust,sog,depth);
+
+    const note=document.querySelector('.demo-note');
+    if(note) note.remove();
+    return true;
+  }
+
+  // ---- Demo-data: 48 u, per 15 min (192 punten), passage Lissabon -> Madeira ----
+  function renderDemo(){
+    const N=192, STEP=15*60*1000, now=Date.now();
+    const t=[...Array(N)].map((_,i)=>new Date(now-(N-1-i)*STEP));
+    const lbl=t.map(d=>d.toLocaleString('nl-NL',{weekday:'short',hour:'2-digit',minute:'2-digit'}));
+
+    let seed=42; const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+    const smooth=(arr,k)=>arr.map((_,i)=>{let s=0,n=0;for(let j=Math.max(0,i-k);j<=Math.min(arr.length-1,i+k);j++){s+=arr[j];n++;}return s/n;});
+
+    let wind=[...Array(N)].map((_,i)=>{
+      const u=i/N;
+      const base=12+6*Math.sin(u*Math.PI*1.2)+(u>0.6?8*Math.exp(-Math.pow((u-0.72)/0.12,2)):0);
+      return base+(rnd()-0.5)*4;
+    });
+    wind=smooth(wind,2).map(v=>Math.max(4,v));
+    const gust=wind.map(v=>v*(1.25+rnd()*0.15));
+    let sog=wind.map(w=>Math.min(7.6,2.2+w*0.27+(rnd()-0.5)*0.8));
+    sog=smooth(sog,2);
+    const depth=[...Array(N)].map((_,i)=>{const hrs=i*0.25; return hrs<6 ? 38+hrs*18+(rnd()-0.5)*6 : null;});
+
+    setTiles(sog[N-1],218,wind[N-1],gust[N-1],depth[N-1],128,
+      new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+' (demo)');
+    drawCharts(lbl,wind,gust,sog,depth);
+  }
+
+  async function refresh(){
+    if(DATA_URL){
+      try{
+        const res=await fetch(DATA_URL+'?t='+Date.now());
+        if(res.ok && renderReal(await res.json())){ laadMiniMap(); return; }
+      }catch(e){ console.warn('data.json laden mislukt, toon demo',e); }
+    }
+    renderDemo();
+    toonMiniMap(38.62,-9.55,5.8,215,null); // demo: bij Cascais
+  }
+
+  refresh();
+  if(DATA_URL) setInterval(refresh, 5*60*1000); // elke 5 min verversen
+</script>
+</body>
+</html>

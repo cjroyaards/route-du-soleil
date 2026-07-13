@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Route du Soleil — Vindö 65 S · Sabbatical 2028</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Vindö 65 S · 18 mei — 5 november 2028</div>
+  <h1>Route du Soleil</h1>
+  <p class="sub">Met onze Vindö 65 S van Nederland naar de Côte d&rsquo;Azur — via Bretagne, Biskaje, Portugal, Madeira, de Canarische Eilanden, Marokko en de Middellandse Zee.</p>
+  <div class="badge"><span class="pulse"></span>LIVE TRACKING</div>
+</header>
+
+<nav>
+  <a href="#live">Waar zijn we?</a>
+  <a href="etappes.html">Etappes</a>
+  <a href="meezeilen.html">Zeil mee!</a>
+  <a href="#route">Opstapschema</a>
+  <a href="#klassement">Klassement</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="#logboek">Logboek</a>
+  <a href="#schip">Het schip</a>
+</nav>
+
+<section id="live">
+  <h2>Waar zijn we nu?</h2>
+  <p class="lede">Onze positie wordt automatisch ge-üpdatet via Starlink. Klik op de kaart voor details per waypoint.</p>
+  <div class="live-wrap">
+    <div id="map"></div>
+    <div class="live-card">
+      <h3><span class="pulse"></span>Laatste positie</h3>
+      <div class="stat-row"><span>Positie</span><span id="pos">38°42′ N, 9°25′ W</span></div>
+      <div class="stat-row"><span>Bij</span><span id="near">Cascais, Portugal</span></div>
+      <div class="stat-row"><span>Snelheid</span><span id="spd">5,8 kn</span></div>
+      <div class="stat-row"><span>Koers</span><span id="crs">215°</span></div>
+      <div class="stat-row"><span>Update</span><span id="upd">—</span></div>
+      <div class="stat-row"><span>Volgende haven</span><span id="nexthaven">Funchal, Madeira</span></div>
+      <div class="demo-note" id="demo-note"><strong>Demo-modus.</strong> Zodra de Signal K GitHub-tracker aan boord draait, vul je onderaan de pagina de TRACK_URL in — daarna is deze kaart live (zie 05_Website/tracking/README.md).</div>
+    </div>
+  </div>
+</section>
+
+<div class="band">
+  <section>
+    <div class="stats">
+      <div><div class="num" id="nm">1.240</div><div class="lbl">zeemijl gevaren</div></div>
+      <div><div class="num">14</div><div class="lbl">dagen op zee</div></div>
+      <div><div class="num">9,2</div><div class="lbl">topsnelheid (kn)</div></div>
+      <div><div class="num">11</div><div class="lbl">havens &amp; ankerplekken</div></div>
+    </div>
+  </section>
+</div>
+
+<section id="route">
+  <h2>Route &amp; opstapschema</h2>
+  <p class="lede">Voor de opstappers: hieronder zie je per leg waar de boot hoort te zijn. Op de live-kaart check je of we op schema liggen vóór je je vlucht boekt.</p>
+  <table>
+    <tr><th>Periode 2028</th><th>Traject</th><th>Aan boord</th></tr>
+    <tr><td>18 – 25 mei</td><td>Nederland → Kanaal → Guernsey</td><td><span class="crew-tag c-fam">Opstappers</span></td></tr>
+    <tr><td>26 mei – 8 jun</td><td>Guernsey → Brest</td><td><span class="crew-tag c-solo">Solo</span></td></tr>
+    <tr><td>8 – 22 jun</td><td>Biskaje-oversteek → Rías van Galicië</td><td><span class="crew-tag c-fam">Opstapper</span></td></tr>
+    <tr><td>23 – 26 jun</td><td>Speelweek Rías</td><td><span class="crew-tag c-solo">Solo</span></td></tr>
+    <tr><td>27 jun – 7 jul</td><td>Vigo → Lissabon → Madeira</td><td><span class="crew-tag c-fam">Opstapper</span></td></tr>
+    <tr><td>8 – 30 jul</td><td>Madeira → Canarische Eilanden (eilandhoppen)</td><td><span class="crew-tag c-fam">Opstappers</span></td></tr>
+    <tr><td>31 jul – 23 aug</td><td>Arrecife → Agadir → Marokkaanse kust (Safi)</td><td><span class="crew-tag c-fam">Opstapper</span></td></tr>
+    <tr><td>24 aug – 19 sep</td><td>Tanger → Gibraltar → Balearen → Sardinië</td><td><span class="crew-tag c-fam">Opstapper</span></td></tr>
+    <tr><td>20 sep – 5 okt</td><td>Sardinië &amp; Corsica</td><td><span class="crew-tag c-fam">Opstappers</span></td></tr>
+    <tr><td>6 – 10 okt</td><td>Calvi</td><td><span class="crew-tag c-solo">Solo</span></td></tr>
+    <tr><td>11 – 19 okt</td><td>Calvi → Saint-Tropez</td><td><span class="crew-tag c-fam">Opstapper</span></td></tr>
+    <tr><td>20 okt – 2 nov</td><td>Côte d&rsquo;Azur → La Grande-Motte</td><td><span class="crew-tag c-fam">Wisselend</span></td></tr>
+  </table>
+</section>
+
+<section id="klassement">
+  <h2>Bemanningsklassement</h2>
+  <p class="lede">Automatisch bijgehouden uit de boordinstrumenten (Signal K): wie maakte de langste oversteek, wie had de meeste wind? Records krijgen een 🏆.</p>
+  <table id="klassementTabel">
+    <tr><th>Opstapper</th><th>Mijlen totaal</th><th>Langste non-stop</th><th>Max wind</th><th>Topsnelheid</th><th>Nachten op zee</th></tr>
+    <tr><td><span class="crew-tag c-solo">Kees (schipper)</span></td><td>🏆 3.150 nm</td><td>530 nm · 96 u</td><td>32 kn</td><td>🏆 9,4 kn</td><td>🏆 23</td></tr>
+    <tr><td><span class="crew-tag c-rob">Opstapper A</span></td><td>1.420 nm</td><td>365 nm · 68 u</td><td>🏆 32 kn</td><td>9,2 kn</td><td>9</td></tr>
+    <tr><td><span class="crew-tag c-michiel">Opstapper B</span></td><td>1.180 nm</td><td>🏆 530 nm · 96 u</td><td>27 kn</td><td>8,8 kn</td><td>8</td></tr>
+    <tr><td><span class="crew-tag c-fam">Opstapper C</span></td><td>690 nm</td><td>280 nm · 48 u</td><td>22 kn</td><td>8,1 kn</td><td>4</td></tr>
+    <tr><td><span class="crew-tag c-merijn">Opstapper D</span></td><td>295 nm</td><td>120 nm · 26 u</td><td>24 kn</td><td>7,6 kn</td><td>2</td></tr>
+  </table>
+  <div class="demo-note" id="klassementNote" style="margin-top:16px;font-family:Arial,sans-serif"><strong>Demo-cijfers.</strong> Zodra er opstapper-periodes zijn ingevoerd (beheerpagina), rekent deze tabel zichzelf uit de boorddata uit.</div>
+</section>
+
+<section id="logboek">
+  <h2>Logboek</h2>
+  <p class="lede">Verhalen en foto&rsquo;s van onderweg — ge-üpload zodra er Starlink of haven-wifi is.</p>
+  <div class="posts">
+    <div class="post"><div class="ph">⚓</div><div class="body">
+      <div class="date">Voorbeeld · 22 juni 2028</div>
+      <h3>Biskaje ligt achter ons</h3>
+      <p>Drie dagen en twee nachten, een stevige westelijke deining en één onvergetelijke nacht met dolfijnen in het boeggolf-licht. We liggen nu in Camariñas…</p>
+    </div></div>
+    <div class="post"><div class="ph">🌅</div><div class="body">
+      <div class="date">Voorbeeld · 7 juli 2028</div>
+      <h3>Landfall Madeira</h3>
+      <p>Na vijf dagen oceaan doemt Porto Santo op uit de heiïgheid. De eerste echte oceaanpassage zit erop — en de bemanning wil meteen meer…</p>
+    </div></div>
+    <div class="post"><div class="ph">🐪</div><div class="body">
+      <div class="date">Voorbeeld · 12 augustus 2028</div>
+      <h3>Couscous in Safi</h3>
+      <p>Marokko vanaf het water is een andere wereld. Vissersbootjes, de geur van houtskool vanaf de kade, en een havenmeester die ons mee naar huis nam…</p>
+    </div></div>
+  </div>
+</section>
+
+<section id="schip">
+  <h2>Het schip</h2>
+  <p class="lede">Vindö 65 S · 38 voet · polyester</p>
+  <img src="assests/schip.jpg" alt="Vindö 65 S onder gennaker" style="width:100%;border-radius:12px;box-shadow:0 6px 24px rgba(15,42,67,.18);margin-bottom:20px">
+  <p>Onze Vindö 65 S is een Zweedse klassieker: 38 voet, mahonie-opbouw, gebouwd om zeewaardig en comfortabel te zijn. Voor deze reis is ze grondig voorbereid: nieuwe verstaging (2026), lithium-accubank van 400 Ah, Starlink voor communicatie en weer, AIS, en een Volvo Penta die al 3.800 uur trouwe dienst bewijst.</p>
+</section>
+
+<footer>
+  <p><strong>Route du Soleil 2028</strong> · Volg ons live — of stuur een berichtje via <a href="mailto:cjroyaards@gmail.com">e-mail</a>.</p>
+  <p style="margin-top:10px;max-width:640px;margin-left:auto;margin-right:auto">
+    Voor de bouwer: de live-tracking komt uit onze eigen Signal K GitHub-tracker (zie <code>tracking/README.md</code>). Vul in het script hieronder de <code>TRACK_URL</code> in zodra de plugin op de Cerbo GX draait. Backup: de gratis <a href="https://www.predictwind.com/apps/predictwind-tracker" target="_blank">PredictWind Tracker-app</a>.
+  </p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  const map = L.map('map', {scrollWheelZoom:false}).setView([40.5,-7.5], 4);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'&copy; OpenStreetMap', maxZoom:18
+  }).addTo(map);
+
+  // Geplande route NL → Côte d'Azur
+  const route = [
+    {p:[51.98,4.12],  n:'Vertrek Nederland · 18 mei'},
+    {p:[49.45,-2.54], n:'Guernsey'},
+    {p:[48.38,-4.49], n:'Brest'},
+    {p:[43.12,-9.18], n:'Camariñas (na Biskaje)'},
+    {p:[42.24,-8.72], n:'Vigo / Rías'},
+    {p:[38.70,-9.42], n:'Lissabon / Cascais'},
+    {p:[32.64,-16.91],n:'Funchal, Madeira'},
+    {p:[28.96,-13.55],n:'Arrecife, Lanzarote'},
+    {p:[27.93,-15.39],n:'Gran Canaria'},
+    {p:[30.42,-9.62], n:'Agadir'},
+    {p:[32.30,-9.24], n:'Safi'},
+    {p:[35.79,-5.81], n:'Tanger'},
+    {p:[36.14,-5.35], n:'Gibraltar'},
+    {p:[39.57,2.65],  n:'Mallorca'},
+    {p:[39.22,9.10],  n:'Cagliari, Sardinië'},
+    {p:[42.57,8.76],  n:'Calvi, Corsica'},
+    {p:[43.27,6.64],  n:'Saint-Tropez'},
+    {p:[43.56,4.08],  n:'La Grande-Motte · ± 2 nov'}
+  ];
+  const coords = route.map(w=>w.p);
+
+  // Geplande route (stippellijn)
+  L.polyline(coords,{color:'#16395c',weight:2,dashArray:'6 8',opacity:.7}).addTo(map);
+
+  // Waypoint-markers
+  route.forEach(w=>{
+    L.circleMarker(w.p,{radius:4,color:'#16395c',fillColor:'#fdfcf9',fillOpacity:1,weight:2})
+      .addTo(map).bindPopup('<b>'+w.n+'</b>');
+  });
+
+  map.fitBounds(coords,{padding:[30,30]});
+
+  // ============ LIVE TRACKING ============
+  // Vul hier de raw-URL van track.json in zodra de Signal K-plugin draait, b.v.:
+  // 'https://raw.githubusercontent.com/JOUWNAAM/route-du-soleil/main/data/track.json'
+  const TRACK_URL = 'https://raw.githubusercontent.com/cjroyaards/route-du-soleil/main/data/track.json';
+
+  const boat = L.divIcon({html:'<div style="font-size:26px">⛵</div>',className:'',iconSize:[30,30],iconAnchor:[15,15]});
+  let liveLayers = [];
+
+  function toDMS(v, isLat){
+    const h = isLat ? (v>=0?'N':'S') : (v>=0?'O':'W');
+    const a = Math.abs(v), d = Math.floor(a), m = Math.round((a-d)*60);
+    return d+'°'+String(m).padStart(2,'0')+'′ '+h;
+  }
+  function nmSum(pts){
+    const R=3440.065; let s=0;
+    for(let i=1;i<pts.length;i++){
+      const [la1,lo1]=pts[i-1],[la2,lo2]=pts[i];
+      const dLa=(la2-la1)*Math.PI/180, dLo=(lo2-lo1)*Math.PI/180;
+      const a=Math.sin(dLa/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLo/2)**2;
+      s+=2*R*Math.asin(Math.sqrt(a));
+    }
+    return s;
+  }
+
+  const maandCache = {}; // afgesloten maanden zijn immutable: 1x ophalen is genoeg
+
+  // plaatsnaam bij positie (gratis, zonder API-key); alleen opnieuw opzoeken na >2 km verplaatsing
+  let lastGeo = {lat:null, lon:null, name:null};
+  async function plaatsnaam(lat, lon){
+    if(lastGeo.name && Math.abs(lat-lastGeo.lat)<0.02 && Math.abs(lon-lastGeo.lon)<0.02) return lastGeo.name;
+    try{
+      const r = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lon+'&localityLanguage=nl');
+      if(r.ok){
+        const g = await r.json();
+        const land = (g.countryName||'').replace('Koninkrijk der Nederlanden','Nederland').replace('Verenigd Koninkrijk van Groot-Brittannië en Noord-Ierland','Verenigd Koninkrijk');
+        const naam = [g.locality || g.city, land].filter(Boolean).join(', ');
+        lastGeo = {lat, lon, name: naam || 'op zee'};
+        return lastGeo.name;
+      }
+    }catch(e){}
+    return lastGeo.name || '—';
+  }
+
+  async function laadLiveTrack(){
+    try{
+      const r = await fetch(TRACK_URL+'?t='+Date.now(), {cache:'no-store'});
+      if(!r.ok) throw new Error(r.status);
+      const d = await r.json();
+
+      // archief-maanden (track-YYYY-MM.json) ervoor plakken
+      let alle = [];
+      for(const m of (d.months||[])){
+        if(!maandCache[m]){
+          try{
+            const rm = await fetch(TRACK_URL.replace('track.json','track-'+m+'.json'));
+            if(rm.ok) maandCache[m] = (await rm.json()).points || [];
+          }catch(e){ maandCache[m] = []; }
+        }
+        alle = alle.concat(maandCache[m]||[]);
+      }
+      alle = alle.concat(d.points||[]);
+      if(!alle.length) return;
+      d.points = alle;
+
+      liveLayers.forEach(l=>map.removeLayer(l)); liveLayers=[];
+      const pts = d.points.map(p=>[p[0],p[1]]);
+      liveLayers.push(L.polyline(pts,{color:'#e8a13d',weight:3.5,opacity:.95}).addTo(map));
+
+      const last = d.points[d.points.length-1];
+      const [lat,lon,ts,sog,cog] = last;
+      const tijd = new Date(ts).toLocaleString('nl-NL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      liveLayers.push(L.marker([lat,lon],{icon:boat}).addTo(map)
+        .bindPopup('<b>Live positie</b><br>'+(sog!=null?sog.toLocaleString('nl-NL')+' kn':'—')+
+                   (cog!=null?' · koers '+cog+'°':'')+'<br>'+tijd));
+
+      document.getElementById('pos').textContent = toDMS(lat,true)+', '+toDMS(lon,false);
+      plaatsnaam(lat,lon).then(n=>{ document.getElementById('near').textContent = n; });
+      document.getElementById('nexthaven').textContent = '—'; // t.z.t. koppelen aan het opstapschema
+      document.getElementById('spd').textContent = sog!=null ? sog.toLocaleString('nl-NL')+' kn' : '—';
+      document.getElementById('crs').textContent = cog!=null ? cog+'°' : '—';
+      document.getElementById('upd').textContent = tijd;
+      document.getElementById('nm').textContent = Math.round(nmSum(pts)).toLocaleString('nl-NL');
+      const note = document.getElementById('demo-note');
+      if(note) note.style.display = 'none';
+    }catch(e){
+      console.warn('Live track niet beschikbaar:', e);
+    }
+  }
+
+  // ============ BEMANNINGSKLASSEMENT ============
+  // Berekend uit data/crew.json (periodes, via beheer.html) + track + hourly.json.
+  async function laadKlassement(){
+    try{
+      const base = TRACK_URL.replace('data/track.json','');
+      const rc = await fetch(base+'data/crew.json?t='+Date.now(),{cache:'no-store'});
+      if(!rc.ok) return;
+      const periods=((await rc.json()).periods||[]).map(p=>({
+        from:Date.parse(p.from.includes('T')?p.from:p.from+'T00:00:00Z'),
+        to:Date.parse(p.to.includes('T')?p.to:p.to+'T23:59:59Z'),
+        crew:p.crew||[]
+      }));
+      if(!periods.length) return;
+
+      // volledige track (archief + lopend)
+      const rt=await fetch(TRACK_URL+'?t='+Date.now(),{cache:'no-store'});
+      if(!rt.ok) return;
+      const td=await rt.json();
+      let pts=[];
+      for(const m of (td.months||[])){
+        if(!maandCache[m]){
+          try{ const rm=await fetch(base+'data/track-'+m+'.json'); if(rm.ok) maandCache[m]=(await rm.json()).points||[]; }
+          catch(e){ maandCache[m]=[]; }
+        }
+        pts=pts.concat(maandCache[m]||[]);
+      }
+      pts=pts.concat(td.points||[]);
+
+      let hours=[];
+      try{ const rh=await fetch(base+'data/hourly.json?t='+Date.now()); if(rh.ok) hours=(await rh.json()).hourly||[]; }catch(e){}
+
+      const havNm=(p,q)=>{
+        const R=3440.065,dLa=(q[0]-p[0])*Math.PI/180,dLo=(q[1]-p[1])*Math.PI/180;
+        const a=Math.sin(dLa/2)**2+Math.cos(p[0]*Math.PI/180)*Math.cos(q[0]*Math.PI/180)*Math.sin(dLo/2)**2;
+        return 2*R*Math.asin(Math.sqrt(a));
+      };
+      const inP=(t,ps)=>!ps||ps.some(p=>t>=p.from&&t<=p.to);
+
+      function stats(ps){ // ps=null → alles (de schipper is er altijd bij)
+        let nm=0;
+        for(let i=1;i<pts.length;i++){
+          const t1=new Date(pts[i-1][2]).getTime(), t2=new Date(pts[i][2]).getTime();
+          if(inP(t1,ps)&&inP(t2,ps)&&t2-t1<2.5*3600000) nm+=havNm(pts[i-1],pts[i]);
+        }
+        let maxWind=null,topSpd=null,bestNm=0,bestU=0,curNm=0,curU=0;
+        const nachten=new Set();
+        for(const h of hours){
+          const t=new Date(h[0]).getTime();
+          if(!inP(t,ps)){ curNm=0;curU=0; continue; }
+          if(h[4]!=null&&(maxWind==null||h[4]>maxWind)) maxWind=h[4];
+          if(h[2]!=null&&(topSpd==null||h[2]>topSpd)) topSpd=h[2];
+          const varend=h[1]!=null&&h[1]>=2;
+          if(varend){ curU++; curNm+=h[1]; if(curNm>bestNm){bestNm=curNm;bestU=curU;} }
+          else{ curU=0;curNm=0; }
+          const uur=new Date(t).getUTCHours();
+          if(varend&&(uur>=22||uur<5)) nachten.add(new Date(t-6*3600000).toISOString().slice(0,10));
+        }
+        return {nm:Math.round(nm),bestNm:Math.round(bestNm),bestU,maxWind,topSpd,nachten:nachten.size};
+      }
+
+      const namen=[...new Set(periods.flatMap(p=>p.crew))];
+      const rijen=[{naam:'Kees (schipper)',s:stats(null)}]
+        .concat(namen.map(n=>({naam:n,s:stats(periods.filter(p=>p.crew.includes(n)))})));
+
+      const max=k=>Math.max(...rijen.map(r=>r.s[k]??-1));
+      const nl=v=>v==null?'—':v.toLocaleString('nl-NL');
+      const cel=(v,best,tekst)=>'<td>'+((v!=null&&v===best&&v>0)?'🏆 ':'')+tekst+'</td>';
+      const tabel=document.getElementById('klassementTabel');
+      tabel.innerHTML='<tr><th>Opstapper</th><th>Mijlen totaal</th><th>Langste non-stop</th><th>Max wind</th><th>Topsnelheid</th><th>Nachten op zee</th></tr>'+
+        rijen.map(r=>'<tr><td><span class="crew-tag c-solo">'+r.naam+'</span></td>'+
+          cel(r.s.nm,max('nm'),nl(r.s.nm)+' nm')+
+          cel(r.s.bestNm,max('bestNm'),r.s.bestNm>0?nl(r.s.bestNm)+' nm · '+r.s.bestU+' u':'—')+
+          cel(r.s.maxWind,max('maxWind'),r.s.maxWind!=null?nl(r.s.maxWind)+' kn':'—')+
+          cel(r.s.topSpd,max('topSpd'),r.s.topSpd!=null?nl(r.s.topSpd)+' kn':'—')+
+          cel(r.s.nachten,max('nachten'),nl(r.s.nachten))+'</tr>').join('');
+      const kn=document.getElementById('klassementNote');
+      if(kn) kn.style.display='none';
+    }catch(e){ console.warn('klassement:',e); }
+  }
+
+  if(TRACK_URL){
+    laadLiveTrack();
+    laadKlassement();
+    setInterval(laadLiveTrack, 5*60*1000); // elke 5 min verversen
+  }else{
+    // Demo-modus: voorbeeldtraject + positie bij Cascais
+    L.polyline(coords.slice(0,6),{color:'#e8a13d',weight:3.5,opacity:.95}).addTo(map);
+    L.marker([38.62,-9.55],{icon:boat}).addTo(map)
+      .bindPopup('<b>Live positie (demo)</b><br>5,8 kn · koers 215°<br>Onderweg naar Madeira').openPopup();
+    document.getElementById('upd').textContent =
+      new Date().toLocaleString('nl-NL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + ' (demo)';
+  }
+</script>
+</body>
+</html>
