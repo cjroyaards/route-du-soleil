@@ -121,6 +121,8 @@ Per record: `[tijd, SOG kn, wind kn, vlaag kn, windrichting °, diepte m, COG °
 
 Per record: `[tijd, SOG gem, SOG max, wind gem, zwaarste vlaag, windrichting °]`. Databron voor het bemanningsklassement (filter op leg-datums).
 
+**data/anker.json** — ankerwacht (v1.3). De plugin zet de wacht automatisch aan zodra de boot >10 min stilligt: ankerpunt vastgelegd, daarna elke 2 min positie/wind/diepte + zwaaigeschiedenis (6 u). Buiten de alarmradius (instelling, standaard 60 m) = alarm + optionele pushmelding via [ntfy](https://ntfy.sh) (app installeren, abonneren op je eigen topic uit de plugin-config). Vaart de boot echt weg, dan schakelt de wacht zichzelf uit. Bekijken: **anker.html** (bookmarken; toont ring, zwaaipatroon, wind, diepte en een "verse data"-bewaking — geen update in 6 min = waarschuwing). Let op: dit is monitoring op afstand, géén vervanging van het ankeralarm aan boord; het ankerpunt is de plek waar de boot tot rust kwam (niet exact waar het anker viel), dus houd de radius ruim.
+
 **Dataverbruik:** de plugin cachet sha's (geen download vóór elke upload) en uploadt alleen wat veranderd is. Reken op ~10 MB/dag varend (worst case ~35 aan het eind van een drukke maand); met push-interval 30 min op zee de helft. Voor anker met instrumenten uit: vrijwel nul.
 
 ## Ankermodus

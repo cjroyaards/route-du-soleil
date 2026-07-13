@@ -58,6 +58,8 @@ module.exports = function (app) {
 
   let minAcc = null
   let hourAcc = null
+  let anchorTimer = null
+  let anchor = { active: false, stillTicks: 0, prev: null, hist: [] }
 
   plugin.schema = {
     type: 'object',
@@ -120,6 +122,32 @@ module.exports = function (app) {
         type: 'number',
         title: 'Uren dashboard-data bewaren',
         default: 48
+      },
+      anchorWatchEnabled: {
+        type: 'boolean',
+        title: 'Ankerwacht (auto: ligt de boot >10 min stil, dan wordt het ankerpunt vastgelegd)',
+        default: true
+      },
+      anchorRadius: {
+        type: 'number',
+        title: 'Ankerwacht: alarmradius (meter)',
+        description: 'Kettinglengte + marge; daarbuiten = alarm',
+        default: 60
+      },
+      anchorPushMinutes: {
+        type: 'number',
+        title: 'Ankerwacht: push-interval (minuten)',
+        default: 2
+      },
+      anchorFilePath: {
+        type: 'string',
+        title: 'Pad van het ankerwacht-bestand in de repo',
+        default: 'data/anker.json'
+      },
+      ntfyTopic: {
+        type: 'string',
+        title: 'ntfy-topic voor ankeralarm op je telefoon (optioneel)',
+        description: 'Kies een moeilijk te raden naam (b.v. pieternel-anker-x7q2), installeer de gratis ntfy-app en abonneer je op hetzelfde topic'
       }
     }
   }
@@ -144,6 +172,7 @@ module.exports = function (app) {
   }
 
   const r1 = v => (v === null ? null : Math.round(v * 10) / 10)
+  const r5 = v => Math.round(v * 1e5) / 1e5
   const monthOf = iso => iso.slice(0, 7)
 
   function circMeanDeg (sinSum, cosSum, n) {
@@ -159,7 +188,7 @@ module.exports = function (app) {
     try {
       fs.writeFileSync(stateFile, JSON.stringify({
         trackPoints, trackMonth, archivedMonths, archivePending, unpushed,
-        recent, hourly, shas
+        recent, hourly, shas, anchor
       }))
     } catch (e) {
       app.error('Kon state niet opslaan: ' + e.message)
@@ -178,6 +207,7 @@ module.exports = function (app) {
         recent = s.recent || []
         hourly = s.hourly || []
         shas = s.shas || {}
+        if (s.anchor) anchor = s.anchor
         return true
       }
     } catch (e) {
@@ -533,6 +563,97 @@ module.exports = function (app) {
     }
   }
 
+  // ---------- ankerwacht ----------
+
+  function notifyNtfy (options, dist, radius) {
+    if (!options.ntfyTopic) return
+    fetch('https://ntfy.sh/' + encodeURIComponent(options.ntfyTopic), {
+      method: 'POST',
+      headers: { Title: 'Ankeralarm Pieternel', Priority: 'urgent', Tags: 'anchor,rotating_light' },
+      body: `Boot is ${Math.round(dist)} m van het ankerpunt (alarmradius ${radius} m). Check de ankerpagina.`
+    }).catch(e => app.error('ntfy-melding mislukt: ' + e.message))
+  }
+
+  async function pushAnchor (options, cur, distM, alarm) {
+    let windMs = getValue('environment.wind.speedTrue')
+    if (windMs === null) windMs = getValue('environment.wind.speedApparent')
+    const dirRad = getValue('environment.wind.directionTrue')
+    let depth = getValue('environment.depth.belowTransducer')
+    if (depth === null) depth = getValue('environment.depth.belowSurface')
+    const radius = options.anchorRadius || 60
+    const obj = {
+      updated: new Date().toISOString(),
+      active: anchor.active,
+      alarm: !!alarm,
+      anchor: anchor.active
+        ? { lat: anchor.lat, lon: anchor.lon, since: anchor.since, radius }
+        : null,
+      pos: [r5(cur[0]), r5(cur[1])],
+      distM: Math.round(distM),
+      wind: {
+        kn: windMs === null ? null : r1(windMs * KNOTS_PER_MS),
+        dir: dirRad === null ? null : Math.round(dirRad * DEG_PER_RAD)
+      },
+      depth: depth === null ? null : r1(depth),
+      hist: anchor.hist
+    }
+    await ghPut(options, options.anchorFilePath || 'data/anker.json', obj,
+      `anker: ${alarm ? 'ALARM ' : ''}${Math.round(distM)} m`)
+  }
+
+  async function anchorTick (options) {
+    if (options.anchorWatchEnabled === false) return
+    const pos = getValue('navigation.position')
+    if (!pos || typeof pos.latitude !== 'number') return
+    const now = Date.now()
+    const cur = [pos.latitude, pos.longitude]
+    const radius = options.anchorRadius || 60
+    const tickMin = Math.max(1, options.anchorPushMinutes || 2)
+
+    if (!anchor.active) {
+      if (anchor.prev) {
+        const moved = haversineMeters(anchor.prev[0], anchor.prev[1], cur[0], cur[1])
+        anchor.stillTicks = moved < 25 ? (anchor.stillTicks || 0) + 1 : 0
+      }
+      anchor.prev = cur
+      if (anchor.stillTicks < Math.max(2, Math.round(10 / tickMin))) return
+      // >10 min stil: ankerwacht aan, dit is het ankerpunt
+      anchor.active = true
+      anchor.lat = cur[0]
+      anchor.lon = cur[1]
+      anchor.since = new Date(now).toISOString()
+      anchor.alarmSent = false
+      anchor.hist = []
+      app.debug('Ankerwacht actief op ' + r5(cur[0]) + ', ' + r5(cur[1]))
+    }
+
+    const dist = haversineMeters(anchor.lat, anchor.lon, cur[0], cur[1])
+    anchor.hist.push([new Date(now).toISOString(), r5(cur[0]), r5(cur[1])])
+    const cutoff = now - 6 * 3600000
+    while (anchor.hist.length && new Date(anchor.hist[0][0]).getTime() < cutoff) anchor.hist.shift()
+
+    // echt vertrokken (ver buiten de ring)? wacht uitschakelen
+    if (dist > Math.max(3 * radius, 300)) {
+      anchor.active = false
+      anchor.stillTicks = 0
+      anchor.prev = cur
+      saveState()
+      try { await pushAnchor(options, cur, dist, false) } catch (e) { app.debug('anker-push: ' + e.message) }
+      app.debug('Ankerwacht uit (vertrokken)')
+      return
+    }
+
+    const alarm = dist > radius
+    if (alarm && !anchor.alarmSent) {
+      anchor.alarmSent = true
+      notifyNtfy(options, dist, radius)
+      app.error(`ANKERALARM: ${Math.round(dist)} m van ankerpunt (radius ${radius} m)`)
+    }
+    if (!alarm && dist < radius * 0.8) anchor.alarmSent = false // hysterese
+
+    try { await pushAnchor(options, cur, dist, alarm) } catch (e) { app.debug('anker-push mislukt: ' + e.message) }
+  }
+
   // verse install: state terughalen uit GitHub zodat er niets kwijt is
   async function recoverFromGithub (options) {
     try {
@@ -576,6 +697,13 @@ module.exports = function (app) {
       minuteTimer = setInterval(() => closeMinute(options), 60000)
     }
 
+    if (options.anchorWatchEnabled !== false) {
+      anchorTimer = setInterval(
+        () => anchorTick(options),
+        Math.max(1, options.anchorPushMinutes || 2) * 60000
+      )
+    }
+
     app.setPluginStatus(
       `Actief — track elke ${options.logIntervalMinutes || 10} min` +
       (options.dashboardEnabled !== false ? ', dashboard elke minuut' : '') +
@@ -584,8 +712,8 @@ module.exports = function (app) {
   }
 
   plugin.stop = function () {
-    ;[logTimer, pushTimer, sampleTimer, minuteTimer].forEach(t => t && clearInterval(t))
-    logTimer = pushTimer = sampleTimer = minuteTimer = null
+    ;[logTimer, pushTimer, sampleTimer, minuteTimer, anchorTimer].forEach(t => t && clearInterval(t))
+    logTimer = pushTimer = sampleTimer = minuteTimer = anchorTimer = null
     if (stateFile) saveState()
   }
 
