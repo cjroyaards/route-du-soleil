@@ -18,6 +18,58 @@
   <h1>Route du Soleil</h1>
   <p class="sub">Met onze Vindö 65 S van Nederland naar Sardinië — via Bretagne, Biskaje, Portugal, Madeira, de Canarische Eilanden, Marokko en de Middellandse Zee. De boot overwintert in Olbia; in 2029 varen we verder.</p>
   <div class="badge"><span class="pulse"></span>LIVE TRACKING</div>
+
+  <!-- AFTELLER -->
+  <div id="countdown" style="margin-top:28px">
+    <div id="cd-label" style="font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;opacity:.8;margin-bottom:10px">Vertrek uit Stellendam over</div>
+    <div id="cd-blocks" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <div class="cd-b" style="background:rgba(255,255,255,.12);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:14px 18px;min-width:86px">
+        <div id="cd-d" style="font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700;line-height:1">—</div>
+        <div style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-top:6px">dagen</div>
+      </div>
+      <div class="cd-b" style="background:rgba(255,255,255,.12);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:14px 18px;min-width:86px">
+        <div id="cd-h" style="font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700;line-height:1">—</div>
+        <div style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-top:6px">uren</div>
+      </div>
+      <div class="cd-b" style="background:rgba(255,255,255,.12);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:14px 18px;min-width:86px">
+        <div id="cd-m" style="font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700;line-height:1">—</div>
+        <div style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-top:6px">minuten</div>
+      </div>
+      <div class="cd-b" style="background:rgba(255,255,255,.12);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:14px 18px;min-width:86px">
+        <div id="cd-s" style="font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700;line-height:1">—</div>
+        <div style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-top:6px">seconden</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function(){
+      const vertrek = new Date('2028-05-13T09:00:00+02:00');
+      const thuis   = new Date('2028-11-01T18:00:00+01:00');
+      const lbl=document.getElementById('cd-label'), blocks=document.getElementById('cd-blocks');
+      const el={d:document.getElementById('cd-d'),h:document.getElementById('cd-h'),m:document.getElementById('cd-m'),s:document.getElementById('cd-s')};
+      function tick(){
+        const nu=new Date();
+        if(nu<vertrek){
+          let rest=Math.floor((vertrek-nu)/1000);
+          const d=Math.floor(rest/86400); rest-=d*86400;
+          const h=Math.floor(rest/3600);  rest-=h*3600;
+          const m=Math.floor(rest/60), s=rest-m*60;
+          el.d.textContent=d; el.h.textContent=String(h).padStart(2,'0');
+          el.m.textContent=String(m).padStart(2,'0'); el.s.textContent=String(s).padStart(2,'0');
+        }else if(nu<thuis){
+          const dag=Math.floor((nu-vertrek)/86400000)+1;
+          lbl.textContent='⛵ We zijn onderweg';
+          blocks.innerHTML='<div style="font-family:\'Space Grotesk\',sans-serif;font-size:1.6rem;font-weight:700">Dag '+dag+' van de reis</div>';
+          clearInterval(t);
+        }else{
+          lbl.textContent='Seizoen 1 zit erop';
+          blocks.innerHTML='<div style="font-family:\'Space Grotesk\',sans-serif;font-size:1.4rem;font-weight:700">±3.800 nm gevaren — in 2029 varen we verder vanuit Olbia</div>';
+          clearInterval(t);
+        }
+      }
+      const t=setInterval(tick,1000); tick();
+    })();
+  </script>
 </header>
 
 <nav>
