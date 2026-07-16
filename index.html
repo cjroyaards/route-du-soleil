@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Route du Soleil — Vindö 65 S · Sabbatical 2028</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>.crew-tag{margin:6px 4px 0 0}</style>
 </head>
 <body>
 
@@ -73,347 +73,243 @@
 </header>
 
 <nav>
-  <a href="etappes.html">Etappes</a>
-  <a href="#live">Waar zijn we?</a>
+  <a href="index.html" class="act">Etappes</a>
+  <a href="waar-zijn-we.html#live">Waar zijn we?</a>
   <a href="meezeilen.html">Zeil mee!</a>
-  <a href="#route">Opstapschema</a>
-  <a href="#klassement">Klassement</a>
+  <a href="waar-zijn-we.html#route">Opstapschema</a>
+  <a href="waar-zijn-we.html#klassement">Klassement</a>
   <a href="dashboard.html">Dashboard</a>
-  <a href="#logboek">Logboek</a>
-  <a href="#schip">Het schip</a>
+  <a href="waar-zijn-we.html#logboek">Logboek</a>
 </nav>
 
-<section id="live">
-  <h2>Waar zijn we nu?</h2>
-  <p class="lede">Onze positie wordt automatisch ge-üpdatet via Starlink. Klik op de kaart voor details per waypoint.</p>
-  <div class="live-wrap">
-    <div id="map"></div>
-    <div class="live-card">
-      <h3><span class="pulse"></span>Laatste positie</h3>
-      <div class="stat-row"><span>Positie</span><span id="pos">38°42′ N, 9°25′ W</span></div>
-      <div class="stat-row"><span>Bij</span><span id="near">Cascais, Portugal</span></div>
-      <div class="stat-row"><span>Snelheid</span><span id="spd">5,8 kn</span></div>
-      <div class="stat-row"><span>Koers</span><span id="crs">215°</span></div>
-      <div class="stat-row"><span>Update</span><span id="upd">—</span></div>
-      <div class="stat-row"><span>Volgende haven</span><span id="nexthaven">Funchal, Madeira</span></div>
-      <div class="demo-note" id="demo-note"><strong>Demo-modus.</strong> Zodra de Signal K GitHub-tracker aan boord draait, vul je onderaan de pagina de TRACK_URL in — daarna is deze kaart live (zie 05_Website/tracking/README.md).</div>
+<main>
+
+<!-- ========== FASE 1 ========== -->
+<div class="fase">
+  <div class="fase-kop"><span class="nr">Fase 1</span><h2>Iberia</h2><span class="periode">13 mei – 9 juli</span></div>
+  <p class="fase-intro">Het Kanaal, Guernsey, Bretagne, de Golf van Biskaje en dan zuidwaarts langs Spanje en Portugal. </p>
+  <div class="stops">
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cherbourg.jpg?width=640" alt="Cherbourg" loading="lazy">
+      <div class="body">
+        <div class="datum">± 24 mei</div>
+        <h3>Cherbourg</h3>
+        <p>Na anderhalve week dagtochten langs de Franse Kanaalkust — Duinkerke, Boulogne, Dieppe, Fécamp — meren we af in de grootste kunstmatige haven van Europa. Crew-wissel op Hemelvaartweekend.</p>
+        <a class="stop-more" href="haven-cherbourg.html">Lees meer over Cherbourg →</a>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Cherbourg-en-Cotentin" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Alb%C3%A8rt_%C3%89glyise_Saint_Pi%C3%A8rre_Port_Dg%C3%A8rn%C3%A9sy.jpg?width=640" alt="Saint Peter Port" loading="lazy">
+      <div class="body">
+        <div class="datum">± 29 mei</div>
+        <h3>Saint Peter Port, Guernsey</h3>
+        <p>Vanuit Cherbourg door de beruchte Alderney Race — alleen bij kentering! — naar de mooiste havenstad van de Kanaaleilanden. Granieten kades, een getijverschil van tien meter en Engelse pubs met Franse wijn.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Saint_Peter_Port" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brest_-_Le_Ch%C3%A2teau_-_PA00089847_-_011.JPG?width=640" alt="Brest" loading="lazy">
+      <div class="body">
+        <div class="datum">3 – 18 juni</div>
+        <h3>Brest</h3>
+        <p>Via Roscoff en de Chenal du Four naar de marinestad aan het eind van Bretagne — dé wachtkamer voor Biskaje. Crew-wissel op Pinksterweekend, daarna wordt het weerbericht heilig: we vertrekken zodra het venster er is.</p>
+        <a class="stop-more" href="haven-brest.html">Lees meer over Brest →</a>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Brest%2C_France" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ayuntamiento%2C_La_Coru%C3%B1a%2C_Espa%C3%B1a%2C_2015-09-25%2C_DD_44.jpg?width=640" alt="A Coruña" loading="lazy">
+      <div class="body">
+        <div class="datum">± half juni</div>
+        <h3>A Coruña</h3>
+        <p>Land in zicht na drie dagen en twee à drie nachten Golf van Biskaje — de eerste grote test. De Torre de Hércules, de oudste werkende vuurtoren ter wereld, wijst de weg naar binnen.</p>
+        <a class="stop-more" href="haven-a-coruna.html">Lees meer over A Coruña →</a>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/A_Coru%C3%B1a" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Illas_Cies_Praia.jpg?width=640" alt="Cíes-eilanden" loading="lazy">
+      <div class="body">
+        <div class="datum">2e helft juni</div>
+        <h3>Rías de Galicia &amp; Cíes</h3>
+        <p>Speeldagen in de Spaanse fjorden: ankeren, pulpo eten, en het strand van de Cíes-eilanden dat ooit tot mooiste ter wereld werd uitgeroepen. Caribisch wit zand, Atlantisch koud water.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/C%C3%ADes_Islands" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cascais_-_Santa_Marta_%2853854018150%29.jpg?width=640" alt="Cascais" loading="lazy">
+      <div class="body">
+        <div class="datum">± 9 juli</div>
+        <h3>Cascais / Lissabon</h3>
+        <p>In dagtochten langs Porto, Nazaré en Peniche met de noordenwind in de rug naar de baai van Cascais. Crew-wissel, pastéis de nata, en proviand voor het echte werk: de oceaan op.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Cascais" target="_blank">Wikipedia</a></div>
+      </div>
     </div>
   </div>
-</section>
-
-<div class="band">
-  <section>
-    <div class="stats">
-      <div><div class="num" id="nm">1.240</div><div class="lbl">zeemijl gevaren</div></div>
-      <div><div class="num">14</div><div class="lbl">dagen op zee</div></div>
-      <div><div class="num">9,2</div><div class="lbl">topsnelheid (kn)</div></div>
-      <div><div class="num">11</div><div class="lbl">havens &amp; ankerplekken</div></div>
-    </div>
-  </section>
 </div>
 
-<section id="route">
-  <h2>Route &amp; opstapschema</h2>
-  <p class="lede">Voor de opstappers: hieronder zie je per leg waar de boot hoort te zijn. Op de live-kaart check je of we op schema liggen vóór je je vlucht boekt.</p>
-  <table>
-    <tr><th>Periode 2028</th><th>Leg</th><th>Traject</th><th>Aan boord</th></tr>
-    <tr><td>13 – 24 mei</td><td>1</td><td>Stellendam → Kanaalkust → Cherbourg (±280 nm)</td><td><span class="crew-tag c-fam">Opstappers</span></td></tr>
-    <tr><td>28 mei – 3 jun</td><td>2</td><td>Cherbourg → Guernsey → Brest (±185 nm)</td><td><span class="crew-tag c-fam">Opstappers</span></td></tr>
-    <tr><td>venster 5 – 18 jun</td><td>3</td><td>Biskaje: Brest → A Coruña (±360 nm)</td><td><span class="crew-tag c-rob">Ervaren opstapper + 1 plek</span></td></tr>
-    <tr><td>± 23 – 27 jun</td><td>3b</td><td>Rías van Galicië → Vigo (±110 nm)</td><td><span class="crew-tag c-fam">Opstappers</span></td></tr>
-    <tr><td>28 jun – 9 jul</td><td>4</td><td>Vigo → Portugese kust → Lissabon (±230 nm)</td><td><span class="crew-tag c-fam">Opstappers</span></td></tr>
-    <tr><td>± 10 – 15 jul</td><td>5</td><td>Oversteek Lissabon → Madeira (±515 nm)</td><td><span class="crew-tag c-fam">Max 2 opstappers</span></td></tr>
-    <tr><td>± 20 – 22 jul</td><td>6</td><td>Madeira → La Graciosa (±270 nm)</td><td><span class="crew-tag c-fam">Max 2 opstappers</span></td></tr>
-    <tr><td>22 – 31 jul</td><td>7</td><td>Canarisch eilandhoppen → Las Palmas (±150 nm)</td><td><span class="crew-tag c-fam">Familie</span></td></tr>
-    <tr><td>± 1 – 6 aug</td><td>8</td><td>Gran Canaria → Gran Tarajal → Agadir (±345 nm)</td><td><span class="crew-tag c-fam">Max 2 opstappers</span></td></tr>
-    <tr><td>± 7 – 24 aug</td><td>9</td><td>Marokko-kust → Tanger → Gibraltar (±430 nm)</td><td><span class="crew-tag c-fam">Zelfde crew hele kust</span></td></tr>
-    <tr><td>25 aug – 1 sep</td><td>—</td><td>Pauzeweek Gibraltar/La Línea</td><td><span class="crew-tag c-solo">Rust</span></td></tr>
-    <tr><td>± 2 – 6 sep</td><td>10</td><td>Gibraltar → Cartagena → Ibiza (±380 nm)</td><td><span class="crew-tag c-fam">Opstappers</span></td></tr>
-    <tr><td>6 – 20 sep</td><td>11</td><td>Balearen: Ibiza → Mallorca → Mahón (±170 nm)</td><td><span class="crew-tag c-fam">Opstappers</span></td></tr>
-    <tr><td>± 21 – 23 sep</td><td>12</td><td>Oversteek Mahón → Alghero (±190 nm)</td><td><span class="crew-tag c-fam">Max 2 opstappers</span></td></tr>
-    <tr><td>24 sep – eind okt</td><td>13</td><td>Sardinië &amp; Corsica-lus → Olbia (±250 nm)</td><td><span class="crew-tag c-fam">Wisselend</span></td></tr>
-    <tr><td>eind okt</td><td>14</td><td>Olbia: boot de kant op, inwinteren — thuis ± 1 nov</td><td><span class="crew-tag c-solo">Kees (+1)</span></td></tr>
-  </table>
-</section>
-
-<section id="klassement">
-  <h2>Bemanningsklassement</h2>
-  <p class="lede">Automatisch bijgehouden uit de boordinstrumenten (Signal K): wie maakte de langste oversteek, wie had de meeste wind? Records krijgen een 🏆.</p>
-  <table id="klassementTabel">
-    <tr><th>Opstapper</th><th>Mijlen totaal</th><th>Langste non-stop</th><th>Max wind</th><th>Topsnelheid</th><th>Nachten op zee</th></tr>
-    <tr><td><span class="crew-tag c-solo">Kees (schipper)</span></td><td>🏆 3.150 nm</td><td>530 nm · 96 u</td><td>32 kn</td><td>🏆 9,4 kn</td><td>🏆 23</td></tr>
-    <tr><td><span class="crew-tag c-rob">Opstapper A</span></td><td>1.420 nm</td><td>365 nm · 68 u</td><td>🏆 32 kn</td><td>9,2 kn</td><td>9</td></tr>
-    <tr><td><span class="crew-tag c-michiel">Opstapper B</span></td><td>1.180 nm</td><td>🏆 530 nm · 96 u</td><td>27 kn</td><td>8,8 kn</td><td>8</td></tr>
-    <tr><td><span class="crew-tag c-fam">Opstapper C</span></td><td>690 nm</td><td>280 nm · 48 u</td><td>22 kn</td><td>8,1 kn</td><td>4</td></tr>
-    <tr><td><span class="crew-tag c-merijn">Opstapper D</span></td><td>295 nm</td><td>120 nm · 26 u</td><td>24 kn</td><td>7,6 kn</td><td>2</td></tr>
-  </table>
-  <div class="demo-note" id="klassementNote" style="margin-top:16px;font-family:Arial,sans-serif"><strong>Demo-cijfers.</strong> Zodra er opstapper-periodes zijn ingevoerd (beheerpagina), rekent deze tabel zichzelf uit de boorddata uit.</div>
-</section>
-
-<section id="logboek">
-  <h2>Logboek</h2>
-  <p class="lede">Verhalen en foto&rsquo;s van onderweg — ge-üpload zodra er Starlink of haven-wifi is.</p>
-  <div class="posts">
-    <div class="post"><div class="ph">⚓</div><div class="body">
-      <div class="date">Voorbeeld · 22 juni 2028</div>
-      <h3>Biskaje ligt achter ons</h3>
-      <p>Drie dagen en twee nachten, een stevige westelijke deining en één onvergetelijke nacht met dolfijnen in het boeggolf-licht. We liggen nu in A Coruña…</p>
-    </div></div>
-    <div class="post"><div class="ph">🌅</div><div class="body">
-      <div class="date">Voorbeeld · 7 juli 2028</div>
-      <h3>Landfall Madeira</h3>
-      <p>Na vijf dagen oceaan doemt Porto Santo op uit de heiïgheid. De eerste echte oceaanpassage zit erop — en de bemanning wil meteen meer…</p>
-    </div></div>
-    <div class="post"><div class="ph">🐪</div><div class="body">
-      <div class="date">Voorbeeld · 12 augustus 2028</div>
-      <h3>Couscous in Safi</h3>
-      <p>Marokko vanaf het water is een andere wereld. Vissersbootjes, de geur van houtskool vanaf de kade, en een havenmeester die ons mee naar huis nam…</p>
-    </div></div>
+<!-- ========== FASE 2 ========== -->
+<div class="fase">
+  <div class="fase-kop"><span class="nr">Fase 2</span><h2>Macaronesia</h2><span class="periode">10 – 31 juli</span></div>
+  <p class="fase-intro">De eilanden van de gelukzaligen: Madeira en de Canarische Eilanden. </p>
+  <div class="stops">
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Funchal%2C_Jardins_da_Quinta_Vigia_%28lookout%29.jpg?width=640" alt="Funchal" loading="lazy">
+      <div class="body">
+        <div class="datum">± 14 – 19 juli</div>
+        <h3>Funchal, Madeira</h3>
+        <p>Na vier dagen oceaan de landfall op het bloemeneiland: levada-wandelingen in de wolken, poncha in de haven. Een relaxte tussenstop van een paar dagen — dan lokt de passaat alweer.</p>
+        <a class="stop-more" href="haven-funchal.html">Lees meer over Funchal →</a>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Funchal" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Selvagem_Grande_Longe.jpg?width=640" alt="Selvagens-eilanden" loading="lazy">
+      <div class="body">
+        <div class="datum">optioneel · halverwege</div>
+        <h3>Selvagens-eilanden</h3>
+        <p>Een mogelijke tussenstop op weg naar de Canarias: een onbewoond, streng beschermd natuurreservaat midden in de oceaan, met tienduizenden zeevogels en kraakhelder water. Alleen met vergunning vooraf van het natuurpark van Madeira.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Selvagem_Grande_Island" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Arrecife%2C_Lanzarote_2011.JPG?width=640" alt="Lanzarote" loading="lazy">
+      <div class="body">
+        <div class="datum">± 22 juli</div>
+        <h3>La Graciosa &amp; Lanzarote</h3>
+        <p>Twee nachten surfen op de passaat en dan dit: het autoloze La Graciosa met zijn zandstraten, en daarachter de lavawereld van César Manrique's Lanzarote. Hier stapt de familie aan boord voor tien dagen eilandhoppen.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Arrecife" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Canteras_EM1B2907_%2840642755393%29.jpg?width=640" alt="Las Palmas" loading="lazy">
+      <div class="body">
+        <div class="datum">± 29 – 31 juli</div>
+        <h3>Las Palmas, Gran Canaria</h3>
+        <p>Benedenwinds via Fuerteventura naar de zeilhoofdstad van de Atlantik — elke november vertrekt hier de ARC naar de Caraïben. Wij drinken een biertje tussen de wereldomzeilers; familie eruit, oversteek-crew erin.</p>
+        <a class="stop-more" href="haven-las-palmas.html">Lees meer over Las Palmas →</a>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Las_Palmas" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
   </div>
-</section>
+</div>
 
-<section id="schip">
-  <h2>Het schip</h2>
-  <p class="lede">Vindö 65 S · 38 voet · polyester</p>
-  <img src="assests/schip.jpg" alt="Vindö 65 S onder gennaker" style="width:100%;border-radius:12px;box-shadow:0 6px 24px rgba(15,42,67,.18);margin-bottom:20px">
-  <p>Onze Vindö 65 S is een Zweedse klassieker: 38 voet, mahonie-opbouw, gebouwd om zeewaardig en comfortabel te zijn. Voor deze reis is ze grondig voorbereid: nieuwe verstaging (2026), lithium-accubank van 400 Ah, Starlink voor communicatie en weer, AIS, en een Volvo Penta die al 3.800 uur trouwe dienst bewijst.</p>
-</section>
+<!-- ========== FASE 3 ========== -->
+<div class="fase">
+  <div class="fase-kop"><span class="nr">Fase 3</span><h2>Oversteek &amp; Marokko</h2><span class="periode">1 – 24 augustus</span></div>
+  <p class="fase-intro">Via Zuid-Fuerteventura 270 zeemijl open oceaan naar Afrika, dan de Atlantische kust van Marokko omhoog tot de Straat van Gibraltar. </p>
+  <div class="stops">
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/South_view_sea_side_from_Kasbah_of_Agadir_Oufella.jpg?width=640" alt="Agadir" loading="lazy">
+      <div class="body">
+        <div class="datum">± 6 augustus</div>
+        <h3>Agadir</h3>
+        <p>Twee dagen oversteken vanaf Gran Tarajal en dan een ander continent: de geur van houtskool en munt, de kasbah boven de baai. De enige volwaardige marina van de zuidkust — en de springplank voor een excursie het binnenland in.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Agadir" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Essaouira-port.JPG?width=640" alt="Essaouira" loading="lazy" onerror="this.style.display='none'">
+      <div class="body">
+        <div class="datum">± 10 augustus</div>
+        <h3>Essaouira</h3>
+        <p>De blauw-witte havenstad waar de passaat altijd waait: vissersbootjes, meeuwen boven de afslag, de medina op werelderfgoedlijst. Vanaf hier of Casablanca rijden we een dag naar Marrakech.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Essaouira" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Safi_1.png?width=640" alt="Safi" loading="lazy">
+      <div class="body">
+        <div class="datum">± 13 augustus</div>
+        <h3>Safi</h3>
+        <p>Hier komen geen jachten — en precies daarom gaan wij erheen. Vissershaven, pottenbakkersstad, sardines van de grill. Het soort haven waar je verhalen vandaan haalt. Daarna via Casablanca en Rabat noordwaarts.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Safi%2C_Morocco" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tanger_cor.jpg?width=640" alt="Tanger" loading="lazy">
+      <div class="body">
+        <div class="datum">± 22 augustus</div>
+        <h3>Tanger</h3>
+        <p>De stad tussen twee zeeën en twee continenten. Door de witte medina dwalen, en vanaf de boulevard Europa zien liggen. De volgende dag kiezen we een Poniente-dag en gaan met de stroom mee de Straat door.</p>
+        <a class="stop-more" href="haven-tanger.html">Lees meer over Tanger →</a>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Tangier" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== FASE 4 ========== -->
+<div class="fase">
+  <div class="fase-kop"><span class="nr">Fase 4</span><h2>De Middellandse Zee</h2><span class="periode">25 augustus – 1 november</span></div>
+  <p class="fase-intro">Een pauzeweek bij de Rots, dan Cartagena, de Balearen, Sardinië en Corsica — tot de boot in Olbia de kant op gaat voor de winter. </p>
+  <div class="stops">
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Rock_of_Gibraltar_northwest.jpg?width=640" alt="Gibraltar" loading="lazy">
+      <div class="body">
+        <div class="datum">25 augustus – 1 september</div>
+        <h3>Gibraltar — pauzeweek</h3>
+        <p>Welkom op de Middellandse Zee. Na het intensiefste blok van de reis een week echte pauze: bijkomen, boot-onderhoud, belastingvrij diesel tanken onder toeziend oog van de makaken.</p>
+        <a class="stop-more" href="haven-gibraltar.html">Lees meer over Gibraltar →</a>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Gibraltar" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/20211116.Cartagena%2C_Spain.Hafen.-012.jpg?width=640" alt="Cartagena" loading="lazy" onerror="this.style.display='none'">
+      <div class="body">
+        <div class="datum">± 3 september</div>
+        <h3>Cartagena</h3>
+        <p>De mooiste havenstad van de Spaanse zuidoostkust: een Romeins theater pal achter de marina, art-nouveau-boulevards en drieduizend jaar zeevaartgeschiedenis. Rustdag halverwege de passage naar de Balearen.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Cartagena%2C_Spain" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kathedrale_von_Palma.jpg?width=640" alt="Palma de Mallorca" loading="lazy">
+      <div class="body">
+        <div class="datum">6 – 20 september</div>
+        <h3>Balearen</h3>
+        <p>Twee weken dagtochtjes van Ibiza en Formentera via Mallorca naar Menorca: 's ochtends een baai voor onszelf, 's middags zwemmen, 's avonds onder de kathedraal van Palma. Dit is de beloning.</p>
+        <a class="stop-more" href="haven-palma.html">Lees meer over Palma →</a>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Palma_de_Mallorca" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Alghero_Centro_Storico_Panorama.jpg?width=640" alt="Alghero" loading="lazy" onerror="this.style.display='none'">
+      <div class="body">
+        <div class="datum">± 23 september</div>
+        <h3>Alghero, Sardinië</h3>
+        <p>Anderhalve dag open Med vanaf Mahón en dan Italië — al voelt Alghero half Catalaans, met zijn stadsmuren uit de Aragon-tijd en koraalrode zonsondergangen. Startpunt van vier weken Sardinië en Corsica.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Alghero" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Calvi-Semper_fidelis.jpg?width=640" alt="Calvi" loading="lazy">
+      <div class="body">
+        <div class="datum">begin oktober</div>
+        <h3>Bonifacio &amp; West-Corsica</h3>
+        <p>Door de Straat van Bonifacio — alleen bij rustig weer! — en dan de westkust van Corsica omhoog: Ajaccio, de rode kliffen van Girolata, de citadel van Calvi met besneeuwde toppen erachter. Nazomeren op z'n mooist.</p>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Calvi%2C_Haute-Corse" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+    <div class="stop">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Olbia_harbour%2C_Olbia-Tempio%2C_Sardinia%2C_Italy_-_panoramio.jpg?width=640" alt="Olbia" loading="lazy" onerror="this.style.display='none'">
+      <div class="body">
+        <div class="datum">eind oktober</div>
+        <h3>Olbia — eindhaven &amp; overwinteren</h3>
+        <p>Via de Maddalena-archipel en de Costa Smeralda naar de eindhaven. Na ±3.800 zeemijl gaat de Vindö hier de kant op voor de winter — klaar voor het vervolgseizoen 2029. Wij vliegen met een hoofd vol verhalen naar huis.</p>
+        <a class="stop-more" href="haven-olbia.html">Lees meer over Olbia →</a>
+        <div class="credit">foto: <a href="https://en.wikipedia.org/wiki/Olbia" target="_blank">Wikipedia</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
 
 <footer>
-  <p><strong>Route du Soleil 2028</strong> · Volg ons live — of stuur een berichtje via <a href="mailto:cjroyaards@gmail.com">e-mail</a>.</p>
-  <p style="margin-top:10px;max-width:640px;margin-left:auto;margin-right:auto">
-    Voor de bouwer: de live-tracking komt uit onze eigen Signal K GitHub-tracker (zie <code>tracking/README.md</code>). Vul in het script hieronder de <code>TRACK_URL</code> in zodra de plugin op de Cerbo GX draait. Backup: de gratis <a href="https://www.predictwind.com/apps/predictwind-tracker" target="_blank">PredictWind Tracker-app</a>.
-  </p>
+  <p><strong>Route du Soleil 2028</strong> · Foto's via Wikipedia/Wikimedia Commons — bij publicatie individuele licenties en makers vermelden.</p>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script>
-  const map = L.map('map', {scrollWheelZoom:false}).setView([40.5,-7.5], 4);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    attribution:'&copy; OpenStreetMap', maxZoom:18
-  }).addTo(map);
-
-  // Geplande route NL → Olbia (overwinteren Sardinië)
-  const route = [
-    {p:[51.83,4.03],  n:'Vertrek Stellendam · 13 mei'},
-    {p:[49.65,-1.62], n:'Cherbourg'},
-    {p:[49.45,-2.54], n:'Guernsey'},
-    {p:[48.38,-4.49], n:'Brest'},
-    {p:[43.37,-8.40], n:'A Coruña (na Biskaje)'},
-    {p:[42.24,-8.72], n:'Vigo / Rías'},
-    {p:[38.70,-9.42], n:'Lissabon / Cascais'},
-    {p:[32.64,-16.91],n:'Funchal, Madeira'},
-    {p:[29.23,-13.51],n:'La Graciosa'},
-    {p:[28.13,-15.42],n:'Las Palmas, Gran Canaria'},
-    {p:[28.21,-14.05],n:'Gran Tarajal, Fuerteventura'},
-    {p:[30.42,-9.62], n:'Agadir'},
-    {p:[31.51,-9.77], n:'Essaouira'},
-    {p:[33.61,-7.62], n:'Casablanca'},
-    {p:[35.79,-5.81], n:'Tanger'},
-    {p:[36.14,-5.35], n:'Gibraltar · pauzeweek'},
-    {p:[37.58,-0.98], n:'Cartagena'},
-    {p:[38.91,1.43],  n:'Ibiza'},
-    {p:[39.57,2.65],  n:'Mallorca'},
-    {p:[39.88,4.31],  n:'Mahón, Menorca'},
-    {p:[40.56,8.31],  n:'Alghero, Sardinië'},
-    {p:[41.39,9.16],  n:'Bonifacio'},
-    {p:[42.57,8.76],  n:'Calvi, Corsica'},
-    {p:[40.92,9.55],  n:'Olbia · eindhaven, overwinteren · eind okt'}
-  ];
-  const coords = route.map(w=>w.p);
-
-  // Geplande route (stippellijn)
-  L.polyline(coords,{color:'#16395c',weight:2,dashArray:'6 8',opacity:.7}).addTo(map);
-
-  // Waypoint-markers
-  route.forEach(w=>{
-    L.circleMarker(w.p,{radius:4,color:'#16395c',fillColor:'#fdfcf9',fillOpacity:1,weight:2})
-      .addTo(map).bindPopup('<b>'+w.n+'</b>');
-  });
-
-  map.fitBounds(coords,{padding:[30,30]});
-
-  // ============ LIVE TRACKING ============
-  // Vul hier de raw-URL van track.json in zodra de Signal K-plugin draait, b.v.:
-  // 'https://raw.githubusercontent.com/JOUWNAAM/route-du-soleil/main/data/track.json'
-  const TRACK_URL = 'https://raw.githubusercontent.com/cjroyaards/route-du-soleil/main/data/track.json';
-
-  const boat = L.divIcon({html:'<div style="font-size:26px">⛵</div>',className:'',iconSize:[30,30],iconAnchor:[15,15]});
-  let liveLayers = [];
-
-  function toDMS(v, isLat){
-    const h = isLat ? (v>=0?'N':'S') : (v>=0?'O':'W');
-    const a = Math.abs(v), d = Math.floor(a), m = Math.round((a-d)*60);
-    return d+'°'+String(m).padStart(2,'0')+'′ '+h;
-  }
-  function nmSum(pts){
-    const R=3440.065; let s=0;
-    for(let i=1;i<pts.length;i++){
-      const [la1,lo1]=pts[i-1],[la2,lo2]=pts[i];
-      const dLa=(la2-la1)*Math.PI/180, dLo=(lo2-lo1)*Math.PI/180;
-      const a=Math.sin(dLa/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLo/2)**2;
-      s+=2*R*Math.asin(Math.sqrt(a));
-    }
-    return s;
-  }
-
-  const maandCache = {}; // afgesloten maanden zijn immutable: 1x ophalen is genoeg
-
-  // plaatsnaam bij positie (gratis, zonder API-key); alleen opnieuw opzoeken na >2 km verplaatsing
-  let lastGeo = {lat:null, lon:null, name:null};
-  async function plaatsnaam(lat, lon){
-    if(lastGeo.name && Math.abs(lat-lastGeo.lat)<0.02 && Math.abs(lon-lastGeo.lon)<0.02) return lastGeo.name;
-    try{
-      const r = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lon+'&localityLanguage=nl');
-      if(r.ok){
-        const g = await r.json();
-        const land = (g.countryName||'').replace('Koninkrijk der Nederlanden','Nederland').replace('Verenigd Koninkrijk van Groot-Brittannië en Noord-Ierland','Verenigd Koninkrijk');
-        const naam = [g.locality || g.city, land].filter(Boolean).join(', ');
-        lastGeo = {lat, lon, name: naam || 'op zee'};
-        return lastGeo.name;
-      }
-    }catch(e){}
-    return lastGeo.name || '—';
-  }
-
-  async function laadLiveTrack(){
-    try{
-      const r = await fetch(TRACK_URL+'?t='+Date.now(), {cache:'no-store'});
-      if(!r.ok) throw new Error(r.status);
-      const d = await r.json();
-
-      // archief-maanden (track-YYYY-MM.json) ervoor plakken
-      let alle = [];
-      for(const m of (d.months||[])){
-        if(!maandCache[m]){
-          try{
-            const rm = await fetch(TRACK_URL.replace('track.json','track-'+m+'.json'));
-            if(rm.ok) maandCache[m] = (await rm.json()).points || [];
-          }catch(e){ maandCache[m] = []; }
-        }
-        alle = alle.concat(maandCache[m]||[]);
-      }
-      alle = alle.concat(d.points||[]);
-      if(!alle.length) return;
-      d.points = alle;
-
-      liveLayers.forEach(l=>map.removeLayer(l)); liveLayers=[];
-      const pts = d.points.map(p=>[p[0],p[1]]);
-      liveLayers.push(L.polyline(pts,{color:'#e8a13d',weight:3.5,opacity:.95}).addTo(map));
-
-      const last = d.points[d.points.length-1];
-      const [lat,lon,ts,sog,cog] = last;
-      const tijd = new Date(ts).toLocaleString('nl-NL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-      liveLayers.push(L.marker([lat,lon],{icon:boat}).addTo(map)
-        .bindPopup('<b>Live positie</b><br>'+(sog!=null?sog.toLocaleString('nl-NL')+' kn':'—')+
-                   (cog!=null?' · koers '+cog+'°':'')+'<br>'+tijd));
-
-      document.getElementById('pos').textContent = toDMS(lat,true)+', '+toDMS(lon,false);
-      plaatsnaam(lat,lon).then(n=>{ document.getElementById('near').textContent = n; });
-      document.getElementById('nexthaven').textContent = '—'; // t.z.t. koppelen aan het opstapschema
-      document.getElementById('spd').textContent = sog!=null ? sog.toLocaleString('nl-NL')+' kn' : '—';
-      document.getElementById('crs').textContent = cog!=null ? cog+'°' : '—';
-      document.getElementById('upd').textContent = tijd;
-      document.getElementById('nm').textContent = Math.round(nmSum(pts)).toLocaleString('nl-NL');
-      const note = document.getElementById('demo-note');
-      if(note) note.style.display = 'none';
-    }catch(e){
-      console.warn('Live track niet beschikbaar:', e);
-    }
-  }
-
-  // ============ BEMANNINGSKLASSEMENT ============
-  // Berekend uit data/crew.json (periodes, via beheer.html) + track + hourly.json.
-  async function laadKlassement(){
-    try{
-      const base = TRACK_URL.replace('data/track.json','');
-      const rc = await fetch(base+'data/crew.json?t='+Date.now(),{cache:'no-store'});
-      if(!rc.ok) return;
-      const periods=((await rc.json()).periods||[]).map(p=>({
-        from:Date.parse(p.from.includes('T')?p.from:p.from+'T00:00:00Z'),
-        to:Date.parse(p.to.includes('T')?p.to:p.to+'T23:59:59Z'),
-        crew:p.crew||[]
-      }));
-      if(!periods.length) return;
-
-      // volledige track (archief + lopend)
-      const rt=await fetch(TRACK_URL+'?t='+Date.now(),{cache:'no-store'});
-      if(!rt.ok) return;
-      const td=await rt.json();
-      let pts=[];
-      for(const m of (td.months||[])){
-        if(!maandCache[m]){
-          try{ const rm=await fetch(base+'data/track-'+m+'.json'); if(rm.ok) maandCache[m]=(await rm.json()).points||[]; }
-          catch(e){ maandCache[m]=[]; }
-        }
-        pts=pts.concat(maandCache[m]||[]);
-      }
-      pts=pts.concat(td.points||[]);
-
-      let hours=[];
-      try{ const rh=await fetch(base+'data/hourly.json?t='+Date.now()); if(rh.ok) hours=(await rh.json()).hourly||[]; }catch(e){}
-
-      const havNm=(p,q)=>{
-        const R=3440.065,dLa=(q[0]-p[0])*Math.PI/180,dLo=(q[1]-p[1])*Math.PI/180;
-        const a=Math.sin(dLa/2)**2+Math.cos(p[0]*Math.PI/180)*Math.cos(q[0]*Math.PI/180)*Math.sin(dLo/2)**2;
-        return 2*R*Math.asin(Math.sqrt(a));
-      };
-      const inP=(t,ps)=>!ps||ps.some(p=>t>=p.from&&t<=p.to);
-
-      function stats(ps){ // ps=null → alles (de schipper is er altijd bij)
-        let nm=0;
-        for(let i=1;i<pts.length;i++){
-          const t1=new Date(pts[i-1][2]).getTime(), t2=new Date(pts[i][2]).getTime();
-          if(inP(t1,ps)&&inP(t2,ps)&&t2-t1<2.5*3600000) nm+=havNm(pts[i-1],pts[i]);
-        }
-        let maxWind=null,topSpd=null,bestNm=0,bestU=0,curNm=0,curU=0;
-        const nachten=new Set();
-        for(const h of hours){
-          const t=new Date(h[0]).getTime();
-          if(!inP(t,ps)){ curNm=0;curU=0; continue; }
-          if(h[4]!=null&&(maxWind==null||h[4]>maxWind)) maxWind=h[4];
-          if(h[2]!=null&&(topSpd==null||h[2]>topSpd)) topSpd=h[2];
-          const varend=h[1]!=null&&h[1]>=2;
-          if(varend){ curU++; curNm+=h[1]; if(curNm>bestNm){bestNm=curNm;bestU=curU;} }
-          else{ curU=0;curNm=0; }
-          const uur=new Date(t).getUTCHours();
-          if(varend&&(uur>=22||uur<5)) nachten.add(new Date(t-6*3600000).toISOString().slice(0,10));
-        }
-        return {nm:Math.round(nm),bestNm:Math.round(bestNm),bestU,maxWind,topSpd,nachten:nachten.size};
-      }
-
-      const namen=[...new Set(periods.flatMap(p=>p.crew))];
-      const rijen=[{naam:'Kees (schipper)',s:stats(null)}]
-        .concat(namen.map(n=>({naam:n,s:stats(periods.filter(p=>p.crew.includes(n)))})));
-
-      const max=k=>Math.max(...rijen.map(r=>r.s[k]??-1));
-      const nl=v=>v==null?'—':v.toLocaleString('nl-NL');
-      const cel=(v,best,tekst)=>'<td>'+((v!=null&&v===best&&v>0)?'🏆 ':'')+tekst+'</td>';
-      const tabel=document.getElementById('klassementTabel');
-      tabel.innerHTML='<tr><th>Opstapper</th><th>Mijlen totaal</th><th>Langste non-stop</th><th>Max wind</th><th>Topsnelheid</th><th>Nachten op zee</th></tr>'+
-        rijen.map(r=>'<tr><td><span class="crew-tag c-solo">'+r.naam+'</span></td>'+
-          cel(r.s.nm,max('nm'),nl(r.s.nm)+' nm')+
-          cel(r.s.bestNm,max('bestNm'),r.s.bestNm>0?nl(r.s.bestNm)+' nm · '+r.s.bestU+' u':'—')+
-          cel(r.s.maxWind,max('maxWind'),r.s.maxWind!=null?nl(r.s.maxWind)+' kn':'—')+
-          cel(r.s.topSpd,max('topSpd'),r.s.topSpd!=null?nl(r.s.topSpd)+' kn':'—')+
-          cel(r.s.nachten,max('nachten'),nl(r.s.nachten))+'</tr>').join('');
-      const kn=document.getElementById('klassementNote');
-      if(kn) kn.style.display='none';
-    }catch(e){ console.warn('klassement:',e); }
-  }
-
-  if(TRACK_URL){
-    laadLiveTrack();
-    laadKlassement();
-    setInterval(laadLiveTrack, 5*60*1000); // elke 5 min verversen
-  }else{
-    // Demo-modus: voorbeeldtraject + positie bij Cascais
-    L.polyline(coords.slice(0,6),{color:'#e8a13d',weight:3.5,opacity:.95}).addTo(map);
-    L.marker([38.62,-9.55],{icon:boat}).addTo(map)
-      .bindPopup('<b>Live positie (demo)</b><br>5,8 kn · koers 215°<br>Onderweg naar Madeira').openPopup();
-    document.getElementById('upd').textContent =
-      new Date().toLocaleString('nl-NL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + ' (demo)';
-  }
-</script>
 </body>
 </html>
