@@ -1,6 +1,8 @@
 /*
- * signalk-github-tracker  v1.2
+ * signalk-github-tracker  v1.4
  * ----------------------------
+ * v1.4: ankerwacht op afstand aan/uit via data/anker-config.json (geschreven door anker.html);
+ *       plugin checkt dat bestand elke ~10 min zolang de ankerwacht-logica draait.
  * Signal K-plugin voor de Cerbo GX (Venus OS Large) aan boord van de Pieternel (Vindö 65 S).
  *
  * Bestanden in de GitHub-repo:
@@ -60,6 +62,9 @@ module.exports = function (app) {
   let hourAcc = null
   let anchorTimer = null
   let anchor = { active: false, stillTicks: 0, prev: null, hist: [] }
+  let remoteWatch = { enabled: true, checkedAt: 0 }   // aan/uit vanaf de ankerpagina
+  const CONFIG_CHECK_MS = 10 * 60000
+  const CONFIG_PATH = 'data/anker-config.json'
 
   plugin.schema = {
     type: 'object',
@@ -601,8 +606,39 @@ module.exports = function (app) {
       `anker: ${alarm ? 'ALARM ' : ''}${Math.round(distM)} m`)
   }
 
+  // aan/uit-schakelaar van de ankerpagina (data/anker-config.json) periodiek inlezen
+  async function refreshRemoteWatch (options) {
+    if (Date.now() - remoteWatch.checkedAt < CONFIG_CHECK_MS) return
+    remoteWatch.checkedAt = Date.now()
+    try {
+      const cfg = await ghGetJson(options, CONFIG_PATH)
+      if (cfg && typeof cfg.enabled === 'boolean') {
+        if (cfg.enabled !== remoteWatch.enabled) {
+          app.debug('Ankerwacht via site ' + (cfg.enabled ? 'AAN' : 'UIT') + ' gezet')
+        }
+        remoteWatch.enabled = cfg.enabled
+      }
+    } catch (e) {
+      app.debug('anker-config lezen mislukt: ' + e.message)
+    }
+  }
+
   async function anchorTick (options) {
     if (options.anchorWatchEnabled === false) return
+    await refreshRemoteWatch(options)
+    if (!remoteWatch.enabled) {
+      // handmatig uitgezet via de site: wacht deactiveren en dat eenmalig publiceren
+      if (anchor.active) {
+        anchor.active = false
+        anchor.stillTicks = 0
+        saveState()
+        const p = getValue('navigation.position')
+        if (p && typeof p.latitude === 'number') {
+          try { await pushAnchor(options, [p.latitude, p.longitude], 0, false) } catch (e) { app.debug('anker-push: ' + e.message) }
+        }
+      }
+      return
+    }
     const pos = getValue('navigation.position')
     if (!pos || typeof pos.latitude !== 'number') return
     const now = Date.now()
