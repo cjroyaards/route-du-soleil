@@ -1,6 +1,9 @@
 /*
- * signalk-github-tracker  v1.6
+ * signalk-github-tracker  v1.7
  * ----------------------------
+ * v1.7: snelle krab-detectie — voor anker wordt de afstand tot het ankerpunt elke 10 s
+ *       gecheckt (meeliftend op de positie-sampling); alarm gaat dan binnen seconden af
+ *       (ntfy + directe extra push). De reguliere anker-push blijft elke 2 min.
  * v1.6: tochtenlogboek — elke tocht wordt automatisch gedetecteerd (start bij varen,
  *       einde na 20 min stilliggen) en als record [start, eind, nm, maxSOG, maxWind, maxDiepte]
  *       naar data/tochten.json gepusht. Tochtjes < 1 nm worden genegeerd.
@@ -338,10 +341,22 @@ module.exports = function (app) {
 
   // ---------- echte mijlenteller: positie elke 10 s ----------
 
-  function sampleDistance () {
+  function sampleDistance (options) {
     const pos = getValue('navigation.position')
     if (!pos || typeof pos.latitude !== 'number') return
     const cur = [pos.latitude, pos.longitude]
+
+    // snelle krab-detectie: voor anker elke 10 s de ring checken (alarm binnen seconden)
+    if (anchor.active && options && options.anchorWatchEnabled !== false && remoteWatch.enabled) {
+      const distA = haversineMeters(anchor.lat, anchor.lon, cur[0], cur[1])
+      const radiusA = options.anchorRadius || 60
+      if (distA > radiusA && distA < Math.max(3 * radiusA, 300) && !anchor.alarmSent) {
+        anchor.alarmSent = true
+        notifyNtfy(options, distA, radiusA)
+        app.error(`ANKERALARM (10s-check): ${Math.round(distA)} m van ankerpunt (radius ${radiusA} m)`)
+        pushAnchor(options, cur, distA, true).catch(e => app.debug('anker-alarmpush: ' + e.message))
+      }
+    }
     const sogMs = getValue('navigation.speedOverGround')
     let varend = false
     if (lastDistPos) {
@@ -848,7 +863,7 @@ module.exports = function (app) {
 
     // 10s-sampling draait altijd (mijlenteller); wind/dashboard alleen indien aan
     sampleTimer = setInterval(() => {
-      sampleDistance()
+      sampleDistance(options)
       if (options.dashboardEnabled !== false) takeSample()
     }, SAMPLE_MS)
     if (options.dashboardEnabled !== false) {
