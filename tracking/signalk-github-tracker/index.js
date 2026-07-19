@@ -1,6 +1,9 @@
 /*
- * signalk-github-tracker  v1.5
+ * signalk-github-tracker  v1.6
  * ----------------------------
+ * v1.6: tochtenlogboek — elke tocht wordt automatisch gedetecteerd (start bij varen,
+ *       einde na 20 min stilliggen) en als record [start, eind, nm, maxSOG, maxWind, maxDiepte]
+ *       naar data/tochten.json gepusht. Tochtjes < 1 nm worden genegeerd.
  * v1.5: echte mijlenteller — positie wordt elke 10 s bemonsterd en de gezeilde afstand
  *       continu opgeteld (met ruisfilter voor ankeren); de cumulatieve afstand (nm) gaat
  *       als 6e veld mee in elk trackpunt. Punten/pushes blijven even vaak als voorheen.
@@ -71,6 +74,13 @@ module.exports = function (app) {
 
   let cumNm = 0            // echt gezeilde afstand (nm), opgeteld uit 10s-samples
   let lastDistPos = null   // vorige positie-sample voor de afstandsteller
+
+  let tochten = []         // tochtenlogboek: [startIso, eindIso, nm, maxSogKn, maxWindKn, maxDiepteM]
+  let tochtAcc = null      // lopende tocht
+  let tochtStilSecs = 0
+  let tochtenDirty = false
+  const TOCHT_EINDE_SECS = 20 * 60   // 20 min geen voortgang = tocht voorbij
+  const TOCHT_MIN_NM = 1
 
   plugin.schema = {
     type: 'object',
@@ -199,7 +209,7 @@ module.exports = function (app) {
     try {
       fs.writeFileSync(stateFile, JSON.stringify({
         trackPoints, trackMonth, archivedMonths, archivePending, unpushed,
-        recent, hourly, shas, anchor, cumNm
+        recent, hourly, shas, anchor, cumNm, tochten, tochtAcc
       }))
     } catch (e) {
       app.error('Kon state niet opslaan: ' + e.message)
@@ -220,6 +230,8 @@ module.exports = function (app) {
         shas = s.shas || {}
         if (s.anchor) anchor = s.anchor
         cumNm = s.cumNm || 0
+        tochten = s.tochten || []
+        tochtAcc = s.tochtAcc || null
         return true
       }
     } catch (e) {
@@ -316,15 +328,65 @@ module.exports = function (app) {
     const pos = getValue('navigation.position')
     if (!pos || typeof pos.latitude !== 'number') return
     const cur = [pos.latitude, pos.longitude]
+    const sogMs = getValue('navigation.speedOverGround')
+    let varend = false
     if (lastDistPos) {
       const d = haversineMeters(lastDistPos[0], lastDistPos[1], cur[0], cur[1])
-      const sogMs = getValue('navigation.speedOverGround')
       // ruisfilter: alleen optellen als we echt varen (sog > ~1 kn, of zonder sog: > 1 kn afgeleid
       // uit de verplaatsing zelf) en de stap plausibel is (< 40 kn over 10 s = glitch)
-      const varend = sogMs !== null ? sogMs > 0.5 : d > 5.2
+      varend = sogMs !== null ? sogMs > 0.5 : d > 5.2
       if (varend && d < 210) cumNm += d / 1852
     }
     lastDistPos = cur
+
+    // ---- tochtenlogboek ----
+    const nowIso = new Date().toISOString()
+    if (varend) {
+      tochtStilSecs = 0
+      if (!tochtAcc) {
+        tochtAcc = { start: nowIso, nm0: cumNm, maxSog: 0, maxWind: null, maxDepth: null, lastMove: nowIso }
+        app.debug('Tocht gestart ' + nowIso)
+      }
+      tochtAcc.lastMove = nowIso
+    } else if (tochtAcc) {
+      tochtStilSecs += SAMPLE_MS / 1000
+      if (tochtStilSecs >= TOCHT_EINDE_SECS) closeTocht()
+    }
+    if (tochtAcc) {
+      if (sogMs !== null) {
+        const kn = sogMs * KNOTS_PER_MS
+        if (kn > tochtAcc.maxSog) tochtAcc.maxSog = kn
+      }
+      let windMs = getValue('environment.wind.speedTrue')
+      if (windMs === null) windMs = getValue('environment.wind.speedApparent')
+      if (windMs !== null) {
+        const wkn = windMs * KNOTS_PER_MS
+        if (tochtAcc.maxWind === null || wkn > tochtAcc.maxWind) tochtAcc.maxWind = wkn
+      }
+      let depth = getValue('environment.depth.belowTransducer')
+      if (depth === null) depth = getValue('environment.depth.belowSurface')
+      if (depth !== null && (tochtAcc.maxDepth === null || depth > tochtAcc.maxDepth)) {
+        tochtAcc.maxDepth = depth
+      }
+    }
+  }
+
+  function closeTocht () {
+    const t = tochtAcc
+    tochtAcc = null
+    tochtStilSecs = 0
+    if (!t) return
+    const nm = cumNm - t.nm0
+    if (nm < TOCHT_MIN_NM) { app.debug('Mini-tochtje genegeerd (' + r1(nm) + ' nm)'); return }
+    tochten.push([
+      t.start, t.lastMove, r1(nm),
+      t.maxSog > 0 ? r1(t.maxSog) : null,
+      t.maxWind === null ? null : r1(t.maxWind),
+      t.maxDepth === null ? null : r1(t.maxDepth)
+    ])
+    tochtenDirty = true
+    saveState()
+    app.debug(`Tocht afgesloten: ${r1(nm)} nm (${t.start} – ${t.lastMove})`)
   }
 
   // ---------- dashboard: 10s-samples -> minuutrecord -> uurrecord ----------
@@ -579,6 +641,24 @@ module.exports = function (app) {
         hourlyDirty = false
       }
 
+      // 5. tochtenlogboek (alleen als er een tocht is afgesloten)
+      if (tochtenDirty) {
+        // eerste push na (her)start: eerst samenvoegen met wat er al online staat,
+        // zodat handmatig toegevoegde of oudere tochten nooit overschreven worden
+        if (!shas['data/tochten.json']) {
+          const ext = await ghGetJson(options, 'data/tochten.json')
+          if (ext && Array.isArray(ext.tochten)) {
+            const bekend = new Set(tochten.map(t => t[0]))
+            tochten = ext.tochten.filter(t => !bekend.has(t[0])).concat(tochten)
+              .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+          }
+        }
+        await ghPut(options, 'data/tochten.json',
+          { updated: nowIso, tochten },
+          `tocht: ${tochten.length} tocht(en), laatste ${tochten.length ? tochten[tochten.length - 1][2] + ' nm' : ''}`)
+        tochtenDirty = false
+      }
+
       saveState()
       const total = archivedMonths.length
         ? `${trackPoints.length} punten deze maand (+${archivedMonths.length} maand(en) archief)`
@@ -729,6 +809,8 @@ module.exports = function (app) {
       }
       const h = await ghGetJson(options, options.hourlyFilePath || 'data/hourly.json')
       if (h && Array.isArray(h.hourly) && !hourly.length) hourly = h.hourly
+      const tj = await ghGetJson(options, 'data/tochten.json')
+      if (tj && Array.isArray(tj.tochten) && !tochten.length) tochten = tj.tochten
       // data.json bewust niet hersteld: 5-min resolutie, dashboard vult zich vanzelf weer
       saveState()
     } catch (e) {

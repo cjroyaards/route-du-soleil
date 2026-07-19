@@ -93,6 +93,15 @@
   <div class="demo-note" id="klassementNote" style="margin-top:16px;font-family:Arial,sans-serif"><strong>Demo-cijfers.</strong> Zodra er opstapper-periodes zijn ingevoerd (beheerpagina), rekent deze tabel zichzelf uit de boorddata uit.</div>
 </section>
 
+<section id="tochten">
+  <h2>Tochtenlogboek</h2>
+  <p class="lede">Automatisch bijgehouden door de boot: een tocht start zodra we varen en sluit zichzelf af na 20 minuten stilliggen. Per tocht: afstand (echt gezeild), maximale snelheid, wind en diepte — en wie er aan boord was.</p>
+  <table id="tochtenTabel">
+    <tr><th>Datum</th><th>Tijd</th><th>Afstand</th><th>Max snelheid</th><th>Max wind</th><th>Max diepte</th><th>Aan boord</th></tr>
+  </table>
+  <div class="demo-note" id="tochtenNote" style="margin-top:16px">Nog geen tochten geregistreerd — dit vult zich automatisch na de eerste tocht.</div>
+</section>
+
 <section id="logboek">
   <h2>Logboek</h2>
   <p class="lede">Verhalen en foto&rsquo;s van onderweg — ge-üpload zodra er Starlink of haven-wifi is.</p>
@@ -351,9 +360,47 @@
     }catch(e){ console.warn('klassement:',e); }
   }
 
+
+  // ============ TOCHTENLOGBOEK ============
+  async function laadTochten(){
+    try{
+      const base = TRACK_URL.replace('data/track.json','');
+      const rt = await fetch(base+'data/tochten.json?t='+Date.now(),{cache:'no-store'});
+      if(!rt.ok) return;
+      const tochten = ((await rt.json()).tochten||[]);
+      if(!tochten.length) return;
+      let periods=[];
+      try{
+        const rc = await fetch(base+'data/crew.json?t='+Date.now(),{cache:'no-store'});
+        if(rc.ok) periods=((await rc.json()).periods||[]).map(p=>({
+          from:Date.parse(p.from.includes('T')?p.from:p.from+'T00:00:00Z'),
+          to:Date.parse(p.to.includes('T')?p.to:p.to+'T23:59:59Z'),
+          crew:p.crew||[]
+        }));
+      }catch(e){}
+      const nl=v=>v==null?'—':v.toLocaleString('nl-NL');
+      const rijen = tochten.slice().reverse().slice(0,30).map(t=>{
+        const s=new Date(t[0]), e=new Date(t[1]);
+        const wie=[...new Set(periods.filter(p=>e.getTime()>=p.from&&s.getTime()<=p.to).flatMap(p=>p.crew))];
+        const bemanning=['Kees'].concat(wie).join(', ');
+        return '<tr><td>'+s.toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric'})+'</td>'
+          +'<td>'+s.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+' – '+e.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+'</td>'
+          +'<td>'+nl(t[2])+' nm</td>'
+          +'<td>'+(t[3]!=null?nl(t[3])+' kn':'—')+'</td>'
+          +'<td>'+(t[4]!=null?nl(t[4])+' kn':'—')+'</td>'
+          +'<td>'+(t[5]!=null?nl(t[5])+' m':'—')+'</td>'
+          +'<td>'+bemanning+'</td></tr>';
+      }).join('');
+      document.getElementById('tochtenTabel').innerHTML =
+        '<tr><th>Datum</th><th>Tijd</th><th>Afstand</th><th>Max snelheid</th><th>Max wind</th><th>Max diepte</th><th>Aan boord</th></tr>'+rijen;
+      const n=document.getElementById('tochtenNote');
+      if(n) n.style.display='none';
+    }catch(e){ console.warn('tochten:',e); }
+  }
   if(TRACK_URL){
     laadLiveTrack();
     laadKlassement();
+    laadTochten();
     setInterval(laadLiveTrack, 5*60*1000); // elke 5 min verversen
   }else{
     // Demo-modus: voorbeeldtraject + positie bij Cascais
