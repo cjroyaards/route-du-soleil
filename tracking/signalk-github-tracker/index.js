@@ -1,6 +1,9 @@
 /*
- * signalk-github-tracker  v1.4
+ * signalk-github-tracker  v1.5
  * ----------------------------
+ * v1.5: echte mijlenteller — positie wordt elke 10 s bemonsterd en de gezeilde afstand
+ *       continu opgeteld (met ruisfilter voor ankeren); de cumulatieve afstand (nm) gaat
+ *       als 6e veld mee in elk trackpunt. Punten/pushes blijven even vaak als voorheen.
  * v1.4: ankerwacht op afstand aan/uit via data/anker-config.json (geschreven door anker.html);
  *       plugin checkt dat bestand elke ~10 min zolang de ankerwacht-logica draait.
  * Signal K-plugin voor de Cerbo GX (Venus OS Large) aan boord van de Pieternel (Vindö 65 S).
@@ -65,6 +68,9 @@ module.exports = function (app) {
   let remoteWatch = { enabled: true, checkedAt: 0 }   // aan/uit vanaf de ankerpagina
   const CONFIG_CHECK_MS = 10 * 60000
   const CONFIG_PATH = 'data/anker-config.json'
+
+  let cumNm = 0            // echt gezeilde afstand (nm), opgeteld uit 10s-samples
+  let lastDistPos = null   // vorige positie-sample voor de afstandsteller
 
   plugin.schema = {
     type: 'object',
@@ -193,7 +199,7 @@ module.exports = function (app) {
     try {
       fs.writeFileSync(stateFile, JSON.stringify({
         trackPoints, trackMonth, archivedMonths, archivePending, unpushed,
-        recent, hourly, shas, anchor
+        recent, hourly, shas, anchor, cumNm
       }))
     } catch (e) {
       app.error('Kon state niet opslaan: ' + e.message)
@@ -213,6 +219,7 @@ module.exports = function (app) {
         hourly = s.hourly || []
         shas = s.shas || {}
         if (s.anchor) anchor = s.anchor
+        cumNm = s.cumNm || 0
         return true
       }
     } catch (e) {
@@ -278,7 +285,8 @@ module.exports = function (app) {
       Math.round(pos.longitude * 1e5) / 1e5,
       nowIso,
       sogMs === null ? null : r1(sogMs * KNOTS_PER_MS),
-      cogRad === null ? null : Math.round(cogRad * DEG_PER_RAD)
+      cogRad === null ? null : Math.round(cogRad * DEG_PER_RAD),
+      r1(cumNm)                                  // echt gezeilde afstand t/m dit punt
     ]
 
     // maandwissel: lopende maand klaarzetten als archief
@@ -300,6 +308,23 @@ module.exports = function (app) {
     lastLogged = { lat: point[0], lon: point[1], t: now }
     saveState()
     app.debug(`Punt gelogd: ${point[0]}, ${point[1]} (${unpushed} niet gepusht)`)
+  }
+
+  // ---------- echte mijlenteller: positie elke 10 s ----------
+
+  function sampleDistance () {
+    const pos = getValue('navigation.position')
+    if (!pos || typeof pos.latitude !== 'number') return
+    const cur = [pos.latitude, pos.longitude]
+    if (lastDistPos) {
+      const d = haversineMeters(lastDistPos[0], lastDistPos[1], cur[0], cur[1])
+      const sogMs = getValue('navigation.speedOverGround')
+      // ruisfilter: alleen optellen als we echt varen (sog > ~1 kn, of zonder sog: > 1 kn afgeleid
+      // uit de verplaatsing zelf) en de stap plausibel is (< 40 kn over 10 s = glitch)
+      const varend = sogMs !== null ? sogMs > 0.5 : d > 5.2
+      if (varend && d < 210) cumNm += d / 1852
+    }
+    lastDistPos = cur
   }
 
   // ---------- dashboard: 10s-samples -> minuutrecord -> uurrecord ----------
@@ -728,8 +753,12 @@ module.exports = function (app) {
     logTimer = setInterval(() => logPoint(options), logMs)
     pushTimer = setInterval(() => pushToGithub(options), pushMs)
 
+    // 10s-sampling draait altijd (mijlenteller); wind/dashboard alleen indien aan
+    sampleTimer = setInterval(() => {
+      sampleDistance()
+      if (options.dashboardEnabled !== false) takeSample()
+    }, SAMPLE_MS)
     if (options.dashboardEnabled !== false) {
-      sampleTimer = setInterval(takeSample, SAMPLE_MS)
       minuteTimer = setInterval(() => closeMinute(options), 60000)
     }
 

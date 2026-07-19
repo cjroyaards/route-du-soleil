@@ -190,11 +190,14 @@
     return d+'°'+String(m).padStart(2,'0')+'′ '+h;
   }
   function nmSum(pts){
+    // punten met een 6e veld dragen de écht gezeilde afstand (10s-sampling aan boord);
+    // oudere punten zonder dat veld: haversine tussen de punten (ondergrens)
     const R=3440.065; let s=0;
     for(let i=1;i<pts.length;i++){
-      const [la1,lo1]=pts[i-1],[la2,lo2]=pts[i];
-      const dLa=(la2-la1)*Math.PI/180, dLo=(lo2-lo1)*Math.PI/180;
-      const a=Math.sin(dLa/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLo/2)**2;
+      const p=pts[i-1], q=pts[i];
+      if(p.length>5&&q.length>5&&p[5]!=null&&q[5]!=null&&q[5]>=p[5]){ s+=q[5]-p[5]; continue; }
+      const dLa=(q[0]-p[0])*Math.PI/180, dLo=(q[1]-p[1])*Math.PI/180;
+      const a=Math.sin(dLa/2)**2+Math.cos(p[0]*Math.PI/180)*Math.cos(q[0]*Math.PI/180)*Math.sin(dLo/2)**2;
       s+=2*R*Math.asin(Math.sqrt(a));
     }
     return s;
@@ -241,8 +244,8 @@
       d.points = alle;
 
       liveLayers.forEach(l=>map.removeLayer(l)); liveLayers=[];
-      const pts = d.points.map(p=>[p[0],p[1]]);
-      liveLayers.push(L.polyline(pts,{color:'#e8a13d',weight:3.5,opacity:.95}).addTo(map));
+      const latlngs = d.points.map(p=>[p[0],p[1]]);
+      liveLayers.push(L.polyline(latlngs,{color:'#e8a13d',weight:3.5,opacity:.95}).addTo(map));
 
       const last = d.points[d.points.length-1];
       const [lat,lon,ts,sog,cog] = last;
@@ -257,7 +260,7 @@
       document.getElementById('spd').textContent = sog!=null ? sog.toLocaleString('nl-NL')+' kn' : '—';
       document.getElementById('crs').textContent = cog!=null ? cog+'°' : '—';
       document.getElementById('upd').textContent = tijd;
-      document.getElementById('nm').textContent = Math.round(nmSum(pts)).toLocaleString('nl-NL');
+      document.getElementById('nm').textContent = Math.round(nmSum(d.points)).toLocaleString('nl-NL');
       const note = document.getElementById('demo-note');
       if(note) note.style.display = 'none';
     }catch(e){
@@ -306,8 +309,11 @@
       function stats(ps){ // ps=null → alles (de schipper is er altijd bij)
         let nm=0;
         for(let i=1;i<pts.length;i++){
-          const t1=new Date(pts[i-1][2]).getTime(), t2=new Date(pts[i][2]).getTime();
-          if(inP(t1,ps)&&inP(t2,ps)&&t2-t1<2.5*3600000) nm+=havNm(pts[i-1],pts[i]);
+          const p=pts[i-1], q=pts[i];
+          const t1=new Date(p[2]).getTime(), t2=new Date(q[2]).getTime();
+          if(!inP(t1,ps)||!inP(t2,ps)) continue;
+          if(p.length>5&&q.length>5&&p[5]!=null&&q[5]!=null&&q[5]>=p[5]) nm+=q[5]-p[5]; // echte afstand
+          else if(t2-t1<2.5*3600000) nm+=havNm(p,q);
         }
         let maxWind=null,topSpd=null,bestNm=0,bestU=0,curNm=0,curU=0;
         const nachten=new Set();
