@@ -322,6 +322,20 @@ module.exports = function (app) {
     app.debug(`Punt gelogd: ${point[0]}, ${point[1]} (${unpushed} niet gepusht)`)
   }
 
+  // ---------- diepte met spike-filter ----------
+  // dieptemeters geven af en toe één absurde meting (echo-artefact); mediaan van de
+  // laatste 3 samples (30 s) haalt zo'n spike eruit; > 200 m = buiten bereik = null
+  let depthBuf = []
+  function filteredDepth () {
+    let d = getValue('environment.depth.belowTransducer')
+    if (d === null) d = getValue('environment.depth.belowSurface')
+    if (d === null || d < 0 || d > 200) return null
+    depthBuf.push(d)
+    if (depthBuf.length > 3) depthBuf.shift()
+    const s = depthBuf.slice().sort((a, b) => a - b)
+    return s[Math.floor(s.length / 2)]
+  }
+
   // ---------- echte mijlenteller: positie elke 10 s ----------
 
   function sampleDistance () {
@@ -340,6 +354,7 @@ module.exports = function (app) {
     lastDistPos = cur
 
     // ---- tochtenlogboek ----
+    const depthNu = filteredDepth()   // vult ook de mediaanbuffer, elke 10 s
     const nowIso = new Date().toISOString()
     if (varend) {
       tochtStilSecs = 0
@@ -363,10 +378,8 @@ module.exports = function (app) {
         const wkn = windMs * KNOTS_PER_MS
         if (tochtAcc.maxWind === null || wkn > tochtAcc.maxWind) tochtAcc.maxWind = wkn
       }
-      let depth = getValue('environment.depth.belowTransducer')
-      if (depth === null) depth = getValue('environment.depth.belowSurface')
-      if (depth !== null && (tochtAcc.maxDepth === null || depth > tochtAcc.maxDepth)) {
-        tochtAcc.maxDepth = depth
+      if (depthNu !== null && (tochtAcc.maxDepth === null || depthNu > tochtAcc.maxDepth)) {
+        tochtAcc.maxDepth = depthNu
       }
     }
   }
@@ -426,8 +439,7 @@ module.exports = function (app) {
     const a = minAcc
     minAcc = null
 
-    let depth = getValue('environment.depth.belowTransducer')
-    if (depth === null) depth = getValue('environment.depth.belowSurface')
+    const depth = filteredDepth()   // mediaan-gefilterd tegen spookmetingen
     const cogRad = getValue('navigation.courseOverGroundTrue')
 
     const rec = [
@@ -688,8 +700,7 @@ module.exports = function (app) {
     let windMs = getValue('environment.wind.speedTrue')
     if (windMs === null) windMs = getValue('environment.wind.speedApparent')
     const dirRad = getValue('environment.wind.directionTrue')
-    let depth = getValue('environment.depth.belowTransducer')
-    if (depth === null) depth = getValue('environment.depth.belowSurface')
+    const depth = filteredDepth()
     const radius = options.anchorRadius || 60
     const obj = {
       updated: new Date().toISOString(),

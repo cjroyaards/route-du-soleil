@@ -169,7 +169,18 @@
     if(!rec.length) return false;
 
     const lbl=rec.map(r=>new Date(r[0]).toLocaleString('nl-NL',{weekday:'short',hour:'2-digit',minute:'2-digit'}));
-    const sog=rec.map(r=>r[1]), wind=rec.map(r=>r[2]), gust=rec.map(r=>r[3]), depth=rec.map(r=>r[5]);
+    const sog=rec.map(r=>r[1]), wind=rec.map(r=>r[2]), gust=rec.map(r=>r[3]);
+    // diepte: geïsoleerde spookmetingen (dieptemeter-artefacten) wegfilteren
+    const rawDepth=rec.map(r=>r[5]);
+    const depth=rawDepth.map((v,i)=>{
+      if(v==null||v>200) return null;
+      let prev=null,next=null;
+      for(let j=i-1;j>=0;j--){ if(rawDepth[j]!=null&&rawDepth[j]<=200){prev=rawDepth[j];break;} }
+      for(let j=i+1;j<rawDepth.length;j++){ if(rawDepth[j]!=null&&rawDepth[j]<=200){next=rawDepth[j];break;} }
+      const ref=Math.max(prev??0,next??0);
+      if(prev!=null&&next!=null&&v>3*ref+10) return null;  // ver boven beide buren = spike
+      return v;
+    });
 
     // log vandaag: sog (kn) * tijdsduur per record (uit de timestamps, max 10 min)
     const today=new Date(); today.setHours(0,0,0,0);
