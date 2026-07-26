@@ -98,7 +98,7 @@
 
 <section id="tochten">
   <h2>Tochtenlogboek</h2>
-  <p class="lede">Automatisch bijgehouden door de boot: een tocht start zodra we varen en sluit zichzelf af na 20 minuten stilliggen. Per tocht: afstand (echt gezeild), maximale snelheid, wind en diepte — en wie er aan boord was.</p>
+  <p class="lede">Automatisch afgeleid uit de track van de boot: een tocht is een aaneengesloten stuk varen (pauzes korter dan 3 uur horen bij dezelfde tocht) — precies dezelfde berekening als op de beheerpagina. Per tocht: afstand, maximale snelheid, wind en diepte — en wie er aan boord was.</p>
   <table id="tochtenTabel">
     <tr><th>Datum</th><th>Tijd</th><th>Afstand</th><th>Max snelheid</th><th>Max wind</th><th>Max diepte</th><th>Aan boord</th></tr>
   </table>
@@ -368,10 +368,61 @@
   async function laadTochten(){
     try{
       const base = TRACK_URL.replace('data/track.json','');
-      const rt = await fetch(base+'data/tochten.json?t='+Date.now(),{cache:'no-store'});
+
+      // ---- volledige track: archief-maanden + lopende maand ----
+      const rt = await fetch(TRACK_URL+'?t='+Date.now(),{cache:'no-store'});
       if(!rt.ok) return;
-      const tochten = ((await rt.json()).tochten||[]);
+      const td = await rt.json();
+      let pts=[];
+      for(const m of (td.months||[])){
+        if(!maandCache[m]){
+          try{ const rm=await fetch(base+'data/track-'+m+'.json'); if(rm.ok) maandCache[m]=(await rm.json()).points||[]; }
+          catch(e){ maandCache[m]=[]; }
+        }
+        pts=pts.concat(maandCache[m]||[]);
+      }
+      pts=pts.concat(td.points||[]);
+      if(pts.length<2) return;
+
+      // ---- tochtdetectie: IDENTIEK aan de beheerpagina ----
+      // varen = tocht; segmenten die < 3 uur uit elkaar liggen horen bij dezelfde tocht.
+      // Zo komen beheer, tochtenlogboek en klassement altijd uit dezelfde bron (track.json).
+      const MIN_STOP_UUR=3, MIN_TOCHT_NM=1, MIN_SEG_M=150, R=3440.065;
+      const havNm=(p,q)=>{
+        const dLa=(q[0]-p[0])*Math.PI/180, dLo=(q[1]-p[1])*Math.PI/180;
+        const a=Math.sin(dLa/2)**2+Math.cos(p[0]*Math.PI/180)*Math.cos(q[0]*Math.PI/180)*Math.sin(dLo/2)**2;
+        return 2*R*Math.asin(Math.sqrt(a));
+      };
+      const segs=[];
+      for(let i=1;i<pts.length;i++){
+        const nm=havNm(pts[i-1],pts[i]);
+        if(nm*1852>MIN_SEG_M){
+          segs.push({van:new Date(pts[i-1][2]).getTime(), tot:new Date(pts[i][2]).getTime(), nm, i0:i-1, i1:i});
+        }
+      }
+      const detected=[];
+      for(const s of segs){
+        const vorige=detected[detected.length-1];
+        if(vorige && s.van-vorige.tot < MIN_STOP_UUR*3600000){
+          vorige.tot=s.tot; vorige.nm+=s.nm; vorige.i1=s.i1;
+        }else{
+          detected.push({...s});
+        }
+      }
+      const tochten=detected.filter(t=>t.nm>=MIN_TOCHT_NM);
       if(!tochten.length) return;
+
+      // max snelheid per tocht uit de trackpunten (veld 4 = SOG in kn)
+      for(const t of tochten){
+        let mx=null;
+        for(let i=t.i0;i<=t.i1;i++){
+          const v=pts[i]&&pts[i][3];
+          if(v!=null&&(mx==null||v>mx)) mx=v;
+        }
+        t.maxSog=mx;
+      }
+
+      // ---- crew-periodes ----
       let periods=[];
       try{
         const rc = await fetch(base+'data/crew.json?t='+Date.now(),{cache:'no-store'});
@@ -381,17 +432,43 @@
           crew:p.crew||[]
         }));
       }catch(e){}
-      const nl=v=>v==null?'—':v.toLocaleString('nl-NL');
+
+      // ---- max wind uit hourly.json (veld 5 = vlaag/uur, veld 4 = gem. wind) ----
+      let hours=[];
+      try{ const rh=await fetch(base+'data/hourly.json?t='+Date.now(),{cache:'no-store'}); if(rh.ok) hours=(await rh.json()).hourly||[]; }catch(e){}
+      const windIn=(a,b)=>{
+        let mx=null;
+        for(const h of hours){
+          const t=new Date(h[0]).getTime();
+          if(t<a||t>b) continue;
+          const g=h[4]!=null?h[4]:h[3];
+          if(g!=null&&(mx==null||g>mx)) mx=g;
+        }
+        return mx;
+      };
+
+      // ---- bonus: diepte/wind verrijken uit tochten.json (indien de plugin die al pushte) ----
+      let logged=[];
+      try{ const rl=await fetch(base+'data/tochten.json?t='+Date.now(),{cache:'no-store'}); if(rl.ok) logged=(await rl.json()).tochten||[]; }catch(e){}
+      const matchLog=(a,b)=>{
+        for(const L of logged){ const ls=new Date(L[0]).getTime(), le=new Date(L[1]).getTime(); if(le>=a&&ls<=b) return L; }
+        return null;
+      };
+
+      const nl=v=>v==null?'—':(Math.round(v*10)/10).toLocaleString('nl-NL');
       const rijen = tochten.slice().reverse().slice(0,30).map(t=>{
-        const s=new Date(t[0]), e=new Date(t[1]);
+        const s=new Date(t.van), e=new Date(t.tot);
         const wie=[...new Set(periods.filter(p=>e.getTime()>=p.from&&s.getTime()<=p.to).flatMap(p=>p.crew))];
         const bemanning=['Kees'].concat(wie).join(', ');
+        const L=matchLog(t.van,t.tot);
+        const wind = (L&&L[4]!=null) ? L[4] : windIn(t.van,t.tot);
+        const diepte = (L&&L[5]!=null) ? L[5] : null;
         return '<tr><td>'+s.toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric'})+'</td>'
           +'<td>'+s.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+' – '+e.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+'</td>'
-          +'<td>'+nl(t[2])+' nm</td>'
-          +'<td>'+(t[3]!=null?nl(t[3])+' kn':'—')+'</td>'
-          +'<td>'+(t[4]!=null?nl(t[4])+' kn':'—')+'</td>'
-          +'<td>'+(t[5]!=null?nl(t[5])+' m':'—')+'</td>'
+          +'<td>'+nl(t.nm)+' nm</td>'
+          +'<td>'+(t.maxSog!=null?nl(t.maxSog)+' kn':'—')+'</td>'
+          +'<td>'+(wind!=null?nl(wind)+' kn':'—')+'</td>'
+          +'<td>'+(diepte!=null?nl(diepte)+' m':'—')+'</td>'
           +'<td>'+bemanning+'</td></tr>';
       }).join('');
       document.getElementById('tochtenTabel').innerHTML =
