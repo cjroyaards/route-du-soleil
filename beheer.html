@@ -272,16 +272,26 @@ async function opslaan(statusId){
   zetStatus(sid,'Opslaan…','');
   const headers={Authorization:'Bearer '+token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
   try{
-    let sha;
-    const g=await fetch(`${API}?ref=${BRANCH}`,{headers});
-    if(g.ok) sha=(await g.json()).sha; else if(g.status!==404) throw new Error('GET '+g.status);
+    // sha altijd VERS ophalen (geen cache) — anders stuurt de PUT een verouderde sha en geeft GitHub 409
+    const getSha=async()=>{
+      const g=await fetch(`${API}?ref=${BRANCH}&t=`+Date.now(),{headers,cache:'no-store'});
+      if(g.ok) return (await g.json()).sha;
+      if(g.status===404) return undefined; // bestand bestaat nog niet
+      throw new Error('GET '+g.status);
+    };
     bekenden=[...new Set(bekenden.concat(periodes.flatMap(p=>p.crew||[])))].sort();
     const body={updated:new Date().toISOString(),people:bekenden,periods:periodes};
-    const p=await fetch(API,{method:'PUT',headers,body:JSON.stringify({
-      message:'crew: tochten/periodes bijgewerkt',branch:BRANCH,
-      content:btoa(unescape(encodeURIComponent(JSON.stringify(body,null,1)))),
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(body,null,1))));
+    const doPut=async(sha)=>fetch(API,{method:'PUT',headers,body:JSON.stringify({
+      message:'crew: tochten/periodes bijgewerkt',branch:BRANCH,content,
       ...(sha?{sha}:{})
     })});
+    let sha=await getSha();
+    let p=await doPut(sha);
+    if(p.status===409){ // sha verouderd (crew.json ondertussen gewijzigd): verse sha en één keer opnieuw
+      sha=await getSha();
+      p=await doPut(sha);
+    }
     if(!p.ok) throw new Error('PUT '+p.status+' '+(await p.text()).slice(0,120));
     zetStatus(sid,'Opgeslagen ✓','ok');
   }catch(e){
