@@ -1,6 +1,9 @@
 {
- "updated": "2026-07-25T19:22:12.225Z",
+ "updated": "2026-07-26T08:31:27.987Z",
  "people": [
+  "Laurien",
+  "Marielle",
+  "Matthijs",
   "Michiel"
  ],
  "periods": [
@@ -14,7 +17,11 @@
   {
    "from": "2026-07-25T10:04:32.682Z",
    "to": "2026-07-25T16:24:03.194Z",
-   "crew": []
+   "crew": [
+    "Laurien",
+    "Marielle",
+    "Matthijs"
+   ]
   }
  ]
 }
