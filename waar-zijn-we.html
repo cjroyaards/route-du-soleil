@@ -98,7 +98,7 @@
 
 <section id="tochten">
   <h2>Tochtenlogboek</h2>
-  <p class="lede">Automatisch afgeleid uit de track van de boot: een tocht is een aaneengesloten stuk varen (pauzes korter dan 3 uur horen bij dezelfde tocht) — precies dezelfde berekening als op de beheerpagina. Per tocht: afstand, maximale snelheid, wind en diepte — en wie er aan boord was.</p>
+  <p class="lede">Automatisch afgeleid uit de track van de boot: een tocht is een aaneengesloten stuk varen (pauzes korter dan 3 uur horen bij dezelfde tocht) — precies dezelfde berekening als op de beheerpagina. Per tocht: afstand, maximale snelheid, wind en diepte — en wie er aan boord was. <strong>Klik een tocht aan</strong> om het gevaren spoor op de kaart te zien.</p>
   <table id="tochtenTabel">
     <tr><th>Datum</th><th>Tijd</th><th>Afstand</th><th>Max snelheid</th><th>Max wind</th><th>Max diepte</th><th>Aan boord</th></tr>
   </table>
@@ -456,26 +456,61 @@
       };
 
       const nl=v=>v==null?'—':(Math.round(v*10)/10).toLocaleString('nl-NL');
-      const rijen = tochten.slice().reverse().slice(0,30).map(t=>{
+      const geo=[]; // per tocht het echte spoor, voor het uitklap-kaartje
+      const rijen = tochten.slice().reverse().slice(0,30).map((t,idx)=>{
         const s=new Date(t.van), e=new Date(t.tot);
         const wie=[...new Set(periods.filter(p=>e.getTime()>=p.from&&s.getTime()<=p.to).flatMap(p=>p.crew))];
         const bemanning=['Kees'].concat(wie).join(', ');
         const L=matchLog(t.van,t.tot);
         const wind = (L&&L[4]!=null) ? L[4] : windIn(t.van,t.tot);
         const diepte = (L&&L[5]!=null) ? L[5] : null;
-        return '<tr><td>'+s.toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric'})+'</td>'
+        const datum=s.toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric'});
+        geo.push({
+          latlngs: pts.slice(t.i0,t.i1+1).map(p=>[p[0],p[1]]),
+          start:[pts[t.i0][0],pts[t.i0][1]], eind:[pts[t.i1][0],pts[t.i1][1]],
+          bijschrift: datum+' · '+nl(t.nm)+' nm'+(t.maxSog!=null?' · max '+nl(t.maxSog)+' kn':'')+' · '+bemanning
+        });
+        return '<tr class="tocht-rij" onclick="toggleTochtKaart('+idx+')" style="cursor:pointer">'
+          +'<td>'+datum+' <span class="tocht-chev" id="chev-'+idx+'" style="color:#e8a13d">▸</span></td>'
           +'<td>'+s.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+' – '+e.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+'</td>'
           +'<td>'+nl(t.nm)+' nm</td>'
           +'<td>'+(t.maxSog!=null?nl(t.maxSog)+' kn':'—')+'</td>'
           +'<td>'+(wind!=null?nl(wind)+' kn':'—')+'</td>'
           +'<td>'+(diepte!=null?nl(diepte)+' m':'—')+'</td>'
-          +'<td>'+bemanning+'</td></tr>';
+          +'<td>'+bemanning+'</td></tr>'
+          +'<tr class="tocht-detail" id="tdet-'+idx+'" style="display:none"><td colspan="7" style="padding:0 0 16px">'
+          +'<div class="tocht-kaart" id="tkaart-'+idx+'" style="height:260px;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(15,42,67,.15)"></div>'
+          +'<div style="font-size:.85em;color:#5a6b7a;margin-top:6px">Echt gevaren spoor · '+geo[idx].bijschrift+'</div>'
+          +'</td></tr>';
       }).join('');
+      window.__tochtGeo = geo;
       document.getElementById('tochtenTabel').innerHTML =
         '<tr><th>Datum</th><th>Tijd</th><th>Afstand</th><th>Max snelheid</th><th>Max wind</th><th>Max diepte</th><th>Aan boord</th></tr>'+rijen;
       const n=document.getElementById('tochtenNote');
       if(n) n.style.display='none';
     }catch(e){ console.warn('tochten:',e); }
+  }
+
+  // ---- uitklap-kaartje per tocht: lazy Leaflet-map met het echt gevaren spoor ----
+  const tochtMaps={};
+  function toggleTochtKaart(idx){
+    const row=document.getElementById('tdet-'+idx);
+    if(!row) return;
+    const chev=document.getElementById('chev-'+idx);
+    if(row.style.display!=='none'){ row.style.display='none'; if(chev)chev.textContent='▸'; return; }
+    row.style.display=''; if(chev)chev.textContent='▾';
+    const g=(window.__tochtGeo||[])[idx];
+    if(!g||!g.latlngs.length) return;
+    if(!tochtMaps[idx]){
+      const m=L.map('tkaart-'+idx,{scrollWheelZoom:false,attributionControl:false});
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(m);
+      L.polyline(g.latlngs,{color:'#e8a13d',weight:4,opacity:.95}).addTo(m);
+      L.circleMarker(g.start,{radius:6,color:'#16395c',fillColor:'#fdfcf9',fillOpacity:1,weight:2}).addTo(m).bindPopup('Start');
+      L.circleMarker(g.eind,{radius:6,color:'#c0392b',fillColor:'#fdfcf9',fillOpacity:1,weight:2}).addTo(m).bindPopup('Aankomst');
+      tochtMaps[idx]=m;
+    }
+    const m=tochtMaps[idx];
+    setTimeout(()=>{ m.invalidateSize(); m.fitBounds(L.latLngBounds(g.latlngs),{padding:[24,24]}); },60);
   }
   if(TRACK_URL){
     laadLiveTrack();
