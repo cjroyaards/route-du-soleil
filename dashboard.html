@@ -46,7 +46,7 @@
     <div class="tile"><div class="v" id="n-log">—<small> nm</small></div><div class="l">Log vandaag</div></div>
   </div>
 
-  <div class="demo-note dash-note"><strong>Demo-modus.</strong> Deze grafieken tonen gesimuleerde data (passage Lissabon → Madeira). Straks: Signal K op de Cerbo GX logt elke minuut wind/snelheid/diepte en publiceert via Starlink een <code>data.json</code>; dit dashboard leest dat bestand. Diepte valt weg zodra de oceaan dieper is dan het bereik van de dieptemeter — dat is normaal.</div>
+  <div class="demo-note dash-note"><strong>Nog niet onderweg.</strong> Hier komen straks de echte boordcijfers te staan — wind, snelheid en diepte, elke minuut ververst zolang er verbinding is. Wat je nu ziet is een voorbeeldpassage van Lissabon naar Madeira. Op open oceaan blijft de diepte leeg: daar is het water dieper dan de dieptemeter kan zien.</div>
 
   <div class="chart-card">
     <h2>Huidige positie</h2>
@@ -225,7 +225,7 @@
     const depth=[...Array(N)].map((_,i)=>{const hrs=i*0.25; return hrs<6 ? 38+hrs*18+(rnd()-0.5)*6 : null;});
 
     setTiles(sog[N-1],218,wind[N-1],gust[N-1],depth[N-1],128,
-      new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+' (demo)');
+      new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+' (voorbeeld)');
     drawCharts(lbl,wind,gust,sog,depth);
   }
 

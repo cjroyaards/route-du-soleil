@@ -46,7 +46,7 @@
       <div class="stat-row"><span>Koers</span><span id="crs">215°</span></div>
       <div class="stat-row"><span>Update</span><span id="upd">—</span></div>
       <div class="stat-row"><span>Volgende haven</span><span id="nexthaven">Funchal, Madeira</span></div>
-      <div class="demo-note" id="demo-note"><strong>Demo-modus.</strong> Zodra de Signal K GitHub-tracker aan boord draait, vul je onderaan de pagina de TRACK_URL in — daarna is deze kaart live (zie 05_Website/tracking/README.md).</div>
+      <div class="demo-note" id="demo-note"><strong>Nog niet onderweg.</strong> Hier komt vanaf 13 mei 2028 onze echte positie te staan — de boot stuurt hem elke paar minuten door via Starlink. Wat je nu ziet is een voorbeeldtraject.</div>
     </div>
   </div>
 </section>
@@ -67,13 +67,8 @@
   <p class="lede">Automatisch bijgehouden uit de boordinstrumenten (Signal K): wie maakte de langste oversteek, wie had de meeste wind? Records krijgen een 🏆.</p>
   <table id="klassementTabel">
     <tr><th>Opstapper</th><th>Mijlen totaal</th><th>Langste non-stop</th><th>Max wind</th><th>Topsnelheid</th><th>Nachten op zee</th></tr>
-    <tr><td><span class="crew-tag c-solo">Kees (schipper)</span></td><td>🏆 3.150 nm</td><td>530 nm · 96 u</td><td>32 kn</td><td>🏆 9,4 kn</td><td>🏆 23</td></tr>
-    <tr><td><span class="crew-tag c-rob">Opstapper A</span></td><td>1.420 nm</td><td>365 nm · 68 u</td><td>🏆 32 kn</td><td>9,2 kn</td><td>9</td></tr>
-    <tr><td><span class="crew-tag c-michiel">Opstapper B</span></td><td>1.180 nm</td><td>🏆 530 nm · 96 u</td><td>27 kn</td><td>8,8 kn</td><td>8</td></tr>
-    <tr><td><span class="crew-tag c-fam">Opstapper C</span></td><td>690 nm</td><td>280 nm · 48 u</td><td>22 kn</td><td>8,1 kn</td><td>4</td></tr>
-    <tr><td><span class="crew-tag c-merijn">Opstapper D</span></td><td>295 nm</td><td>120 nm · 26 u</td><td>24 kn</td><td>7,6 kn</td><td>2</td></tr>
   </table>
-  <div class="demo-note" id="klassementNote" style="margin-top:16px;font-family:Arial,sans-serif"><strong>Demo-cijfers.</strong> Zodra er opstapper-periodes zijn ingevoerd (beheerpagina), rekent deze tabel zichzelf uit de boorddata uit.</div>
+  <div class="demo-note" id="klassementNote" style="margin-top:16px">Hier komt straks het klassement te staan. Vanaf de eerste zeemijl rekent deze tabel zichzelf uit: wie voer het verst, wie ving de meeste wind.</div>
 </section>
 
 <section id="tochten">
@@ -82,29 +77,13 @@
   <table id="tochtenTabel">
     <tr><th>Datum</th><th>Tijd</th><th>Afstand</th><th>Max snelheid</th><th>Max wind</th><th>Max diepte</th><th>Aan boord</th></tr>
   </table>
-  <div class="demo-note" id="tochtenNote" style="margin-top:16px">Nog geen tochten geregistreerd — dit vult zich automatisch na de eerste tocht.</div>
+  <div class="demo-note" id="tochtenNote" style="margin-top:16px">Hier komt straks tocht voor tocht te staan waar we zijn geweest — de eerste verschijnt zodra we voor het eerst de trossen losgooien.</div>
 </section>
 
 <section id="logboek">
   <h2>Logboek</h2>
   <p class="lede">Verhalen en foto&rsquo;s van onderweg — ge-üpload zodra er Starlink of haven-wifi is.</p>
-  <div class="posts">
-    <div class="post"><div class="ph">⚓</div><div class="body">
-      <div class="date">Voorbeeld · 22 juni 2028</div>
-      <h3>Biskaje ligt achter ons</h3>
-      <p>Drie dagen en twee nachten, een stevige westelijke deining en één onvergetelijke nacht met dolfijnen in het boeggolf-licht. We liggen nu in A Coruña…</p>
-    </div></div>
-    <div class="post"><div class="ph">🌅</div><div class="body">
-      <div class="date">Voorbeeld · 7 juli 2028</div>
-      <h3>Landfall Madeira</h3>
-      <p>Na vijf dagen oceaan doemt Porto Santo op uit de heiïgheid. De eerste echte oceaanpassage zit erop — en de bemanning wil meteen meer…</p>
-    </div></div>
-    <div class="post"><div class="ph">🐪</div><div class="body">
-      <div class="date">Voorbeeld · 12 augustus 2028</div>
-      <h3>Couscous in Safi</h3>
-      <p>Marokko vanaf het water is een andere wereld. Vissersbootjes, de geur van houtskool vanaf de kade, en een havenmeester die ons mee naar huis nam…</p>
-    </div></div>
-  </div>
+  <div class="demo-note">Hier komen straks de verhalen van onderweg: de eerste nacht op zee, landfall op Madeira, een vissershaven in Marokko. Zodra er Starlink of haven-wifi is, verschijnen ze hier — met foto's.</div>
 </section>
 
 <section id="schip">
@@ -501,9 +480,9 @@
     // Demo-modus: voorbeeldtraject + positie bij Cascais
     L.polyline(coords.slice(0,6),{color:'#e8a13d',weight:3.5,opacity:.95}).addTo(map);
     L.marker([38.62,-9.55],{icon:boat}).addTo(map)
-      .bindPopup('<b>Live positie (demo)</b><br>5,8 kn · koers 215°<br>Onderweg naar Madeira').openPopup();
+      .bindPopup('<b>Voorbeeldpositie</b><br>5,8 kn · koers 215°<br>Zo ziet het eruit als we varen').openPopup();
     document.getElementById('upd').textContent =
-      new Date().toLocaleString('nl-NL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + ' (demo)';
+      new Date().toLocaleString('nl-NL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + ' (voorbeeld)';
   }
 </script>
 </body>
