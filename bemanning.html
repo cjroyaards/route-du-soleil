@@ -30,7 +30,7 @@ main{max-width:1080px}
 table{border-collapse:collapse;width:100%;font-size:.92rem;table-layout:fixed}
 th,td{text-align:left;padding:11px 12px;border-bottom:1px solid #e6ecf1;vertical-align:top;line-height:1.45}
 th{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:#8b98a5;font-weight:600}
-tr.vol td{background:#f7f9fb}
+tr.bezet td{background:#f7f9fb}
 .pil{display:inline-block;border-radius:999px;padding:3px 10px;font-size:.72rem;color:#fff;white-space:nowrap}
 .hint{color:#6b7a8a;font-size:.88rem}
 col.c1{width:27%}col.c2{width:15%}col.c3{width:15%}col.c4{width:11%}col.c5{width:32%}
@@ -123,7 +123,7 @@ const fmt=x=>x.getDate()+' '+['jan','feb','mrt','apr','mei','jun','jul','aug','s
 const tb=document.querySelector('#tab tbody');
 ETAPPES.forEach(e=>{
   const tr=document.createElement('tr');
-  if(e.st!=='vrij') tr.className='vol';
+  if(e.st!=='vrij') tr.className='bezet';
   tr.innerHTML='<td>'+(e.n?'<b>'+e.n+'</b> · ':'')+e.naam+'</td><td>'+fmt(e.a)+' – '+fmt(e.b)+'</td><td>'+(e.wie||'—')+'</td>'+
     '<td>'+(e.st==='vrij'?'<span class="pil" style="background:#1faa6b">vrij</span>':'<span class="pil" style="background:'+(KLEUR[e.st]||'#dde5ec')+';color:'+(e.st==='pauze'?'#5b6b7a':'#fff')+'">'+LABEL[e.st]+'</span>')+'</td><td class="hint">'+e.eis+'</td>';
   tb.appendChild(tr);
