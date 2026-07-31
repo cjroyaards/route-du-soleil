@@ -35,17 +35,17 @@
 
 <section id="live">
   <h2>Waar zijn we nu?</h2>
-  <p class="lede">Onze positie wordt automatisch ge-üpdatet via Starlink. Klik op de kaart voor details per waypoint.</p>
+  <p class="lede">Onze positie wordt automatisch geüpdatet via Starlink. Klik op de kaart voor details per waypoint.</p>
   <div class="live-wrap">
     <div id="map"></div>
     <div class="live-card">
       <h3><span class="pulse"></span>Laatste positie</h3>
-      <div class="stat-row"><span>Positie</span><span id="pos">38°42′ N, 9°25′ W</span></div>
-      <div class="stat-row"><span>Bij</span><span id="near">Cascais, Portugal</span></div>
-      <div class="stat-row"><span>Snelheid</span><span id="spd">5,8 kn</span></div>
-      <div class="stat-row"><span>Koers</span><span id="crs">215°</span></div>
+      <div class="stat-row"><span>Positie</span><span id="pos">—</span></div>
+      <div class="stat-row"><span>Bij</span><span id="near">nog in Nederland</span></div>
+      <div class="stat-row"><span>Snelheid</span><span id="spd">—</span></div>
+      <div class="stat-row"><span>Koers</span><span id="crs">—</span></div>
       <div class="stat-row"><span>Update</span><span id="upd">—</span></div>
-      <div class="stat-row"><span>Volgende haven</span><span id="nexthaven">Funchal, Madeira</span></div>
+      <div class="stat-row"><span>Volgende haven</span><span id="nexthaven">Stellendam · start 13 mei 2028</span></div>
       <div class="demo-note" id="demo-note"><strong>Nog niet onderweg.</strong> Hier komt vanaf 13 mei 2028 onze echte positie te staan — de boot stuurt hem elke paar minuten door via Starlink. Wat je nu ziet is een voorbeeldtraject.</div>
     </div>
   </div>
@@ -54,10 +54,10 @@
 <div class="band">
   <section>
     <div class="stats">
-      <div><div class="num" id="nm">1.240</div><div class="lbl">zeemijl gevaren</div></div>
-      <div><div class="num">14</div><div class="lbl">dagen op zee</div></div>
-      <div><div class="num">9,2</div><div class="lbl">topsnelheid (kn)</div></div>
-      <div><div class="num">11</div><div class="lbl">havens &amp; ankerplekken</div></div>
+      <div><div class="num" id="nm">—</div><div class="lbl">zeemijl gevaren</div></div>
+      <div><div class="num">—</div><div class="lbl">dagen op zee</div></div>
+      <div><div class="num">—</div><div class="lbl">topsnelheid (kn)</div></div>
+      <div><div class="num">—</div><div class="lbl">havens &amp; ankerplekken</div></div>
     </div>
   </section>
 </div>
@@ -73,7 +73,7 @@
 
 <section id="tochten">
   <h2>Tochtenlogboek</h2>
-  <p class="lede">Automatisch afgeleid uit de track van de boot: een tocht is een aaneengesloten stuk varen (pauzes korter dan 3 uur horen bij dezelfde tocht) — precies dezelfde berekening als op de beheerpagina. Per tocht: afstand, maximale snelheid, wind en diepte — en wie er aan boord was. <strong>Klik een tocht aan</strong> om het gevaren spoor op de kaart te zien.</p>
+  <p class="lede">Automatisch afgeleid uit de track van de boot: een tocht is een aaneengesloten stuk varen (pauzes korter dan 3 uur horen bij dezelfde tocht). Per tocht: afstand, maximale snelheid, wind en diepte — en wie er aan boord was. <strong>Klik een tocht aan</strong> om het gevaren spoor op de kaart te zien.</p>
   <table id="tochtenTabel">
     <tr><th>Datum</th><th>Tijd</th><th>Afstand</th><th>Max snelheid</th><th>Max wind</th><th>Max diepte</th><th>Aan boord</th></tr>
   </table>
@@ -82,7 +82,7 @@
 
 <section id="logboek">
   <h2>Logboek</h2>
-  <p class="lede">Verhalen en foto&rsquo;s van onderweg — ge-üpload zodra er Starlink of haven-wifi is.</p>
+  <p class="lede">Verhalen en foto&rsquo;s van onderweg — geüpload zodra er Starlink of haven-wifi is.</p>
   <div class="demo-note">Hier komen straks de verhalen van onderweg: de eerste nacht op zee, landfall op Madeira, een vissershaven in Marokko. Zodra er Starlink of haven-wifi is, verschijnen ze hier — met foto's.</div>
 </section>
 
@@ -95,9 +95,7 @@
 
 <footer>
   <p><strong>Route du Soleil 2028</strong> · Volg ons live — of stuur een berichtje via <a href="mailto:cjroyaards@gmail.com">e-mail</a>.</p>
-  <p style="margin-top:10px;max-width:640px;margin-left:auto;margin-right:auto">
-    Voor de bouwer: de live-tracking komt uit onze eigen Signal K GitHub-tracker (zie <code>tracking/README.md</code>). Vul in het script hieronder de <code>TRACK_URL</code> in zodra de plugin op de Cerbo GX draait. Backup: de gratis <a href="https://www.predictwind.com/apps/predictwind-tracker" target="_blank">PredictWind Tracker-app</a>.
-  </p>
+  <!-- Notitie: live-tracking komt uit de eigen Signal K GitHub-tracker (zie tracking/README.md). Vul TRACK_URL in het script hieronder zodra de plugin op de Cerbo GX draait. Backup: PredictWind Tracker-app. -->
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
