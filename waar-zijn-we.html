@@ -46,7 +46,7 @@
       <div class="stat-row"><span>Koers</span><span id="crs">—</span></div>
       <div class="stat-row"><span>Update</span><span id="upd">—</span></div>
       <div class="stat-row"><span>Volgende haven</span><span id="nexthaven">Stellendam · start 13 mei 2028</span></div>
-      <div class="demo-note" id="demo-note"><strong>Nog niet onderweg.</strong> Hier komt vanaf 13 mei 2028 onze echte positie te staan — de boot stuurt hem elke paar minuten door via Starlink. Wat je nu ziet is een voorbeeldtraject.</div>
+      <div class="demo-note" id="demo-note"><strong>Even geen verbinding.</strong> Hier staat normaal onze laatste positie, doorgestuurd vanaf de boot. Lukt dat niet, dan zie je een voorbeeldtraject — probeer het later nog eens.</div>
     </div>
   </div>
 </section>
@@ -55,9 +55,9 @@
   <section>
     <div class="stats">
       <div><div class="num" id="nm">—</div><div class="lbl">zeemijl gevaren</div></div>
-      <div><div class="num">—</div><div class="lbl">dagen op zee</div></div>
-      <div><div class="num">—</div><div class="lbl">topsnelheid (kn)</div></div>
-      <div><div class="num">—</div><div class="lbl">havens &amp; ankerplekken</div></div>
+      <div><div class="num" id="stat-dagen">—</div><div class="lbl">dagen op zee</div></div>
+      <div><div class="num" id="stat-top">—</div><div class="lbl">topsnelheid (kn)</div></div>
+      <div><div class="num" id="stat-tochten">—</div><div class="lbl">tochten gevaren</div></div>
     </div>
   </section>
 </div>
@@ -68,7 +68,7 @@
   <table id="klassementTabel">
     <tr><th>Opstapper</th><th>Mijlen totaal</th><th>Langste non-stop</th><th>Max wind</th><th>Topsnelheid</th><th>Nachten op zee</th></tr>
   </table>
-  <div class="demo-note" id="klassementNote" style="margin-top:16px">Hier komt straks het klassement te staan. Vanaf de eerste zeemijl rekent deze tabel zichzelf uit: wie voer het verst, wie ving de meeste wind.</div>
+  <div class="demo-note" id="klassementNote" style="margin-top:16px">Zodra er opstapper-periodes zijn ingevoerd, rekent deze tabel zichzelf uit de boorddata uit: wie voer het verst, wie ving de meeste wind.</div>
 </section>
 
 <section id="tochten">
@@ -77,7 +77,7 @@
   <table id="tochtenTabel">
     <tr><th>Datum</th><th>Tijd</th><th>Afstand</th><th>Max snelheid</th><th>Max wind</th><th>Max diepte</th><th>Aan boord</th></tr>
   </table>
-  <div class="demo-note" id="tochtenNote" style="margin-top:16px">Hier komt straks tocht voor tocht te staan waar we zijn geweest — de eerste verschijnt zodra we voor het eerst de trossen losgooien.</div>
+  <div class="demo-note" id="tochtenNote" style="margin-top:16px">Nog geen tochten geregistreerd — deze tabel vult zich vanzelf uit de track van de boot.</div>
 </section>
 
 <section id="logboek">
@@ -441,6 +441,14 @@
           +'</td></tr>';
       }).join('');
       window.__tochtGeo = geo;
+
+      const dagen=new Set(tochten.map(t=>new Date(t.van).toDateString())).size;
+      const top=tochten.reduce((m,t)=>(t.maxSog!=null&&t.maxSog>m)?t.maxSog:m,0);
+      const zetStat=(id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
+      zetStat('stat-dagen',dagen);
+      zetStat('stat-top',top>0?(Math.round(top*10)/10).toLocaleString('nl-NL'):'—');
+      zetStat('stat-tochten',tochten.length);
+
       document.getElementById('tochtenTabel').innerHTML =
         '<tr><th>Datum</th><th>Tijd</th><th>Afstand</th><th>Max snelheid</th><th>Max wind</th><th>Max diepte</th><th>Aan boord</th></tr>'+rijen;
       const n=document.getElementById('tochtenNote');
