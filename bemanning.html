@@ -13,27 +13,28 @@
 <meta name="apple-mobile-web-app-title" content="Bemanning RdS">
 <link rel="stylesheet" href="style.css">
 <style>
-main{max-width:960px}
+main{max-width:1080px}
 .card{background:#fff;border-radius:14px;padding:22px 24px;box-shadow:0 2px 14px rgba(22,57,92,.08);margin-bottom:22px}
 .card h2{margin:0 0 14px}
 .legenda{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;color:#5b6b7a;margin-bottom:16px}
 .legenda span{display:flex;align-items:center;gap:6px}
 .sw{width:12px;height:12px;border-radius:3px;display:inline-block}
-.tl-rij{display:flex;align-items:center;margin-bottom:7px}
-.tl-lbl{width:92px;flex:none;font-size:.85rem;color:#16395c;font-weight:600}
-.tl-baan{flex:1;position:relative;height:30px}
-.tl-blok{position:absolute;height:30px;border-radius:5px;font-size:.72rem;line-height:30px;text-align:center;overflow:hidden;white-space:nowrap;color:#fff}
-.tl-vrij{background:none;border:1px dashed #b6c2cd;color:#6b7a8a;line-height:28px}
+.tl-rij{display:flex;align-items:center;margin-bottom:9px}
+.tl-lbl{width:112px;flex:none;font-size:.88rem;color:#16395c;font-weight:600}
+.tl-baan{flex:1;position:relative;height:34px}
+.tl-blok{position:absolute;height:34px;border-radius:6px;font-size:.75rem;line-height:34px;text-align:center;overflow:hidden;white-space:nowrap;color:#fff}
+.tl-vrij{background:none;border:1px dashed #b6c2cd;color:#6b7a8a;line-height:32px}
 .tl-mnd{position:relative;height:18px;font-size:.72rem;color:#8b98a5}
 .tl-mnd span{position:absolute}
-.tl-etap{background:#eef3f7;color:#5b6b7a;height:22px;line-height:22px;font-size:.7rem}
-table{border-collapse:collapse;width:100%;font-size:.9rem}
-th,td{text-align:left;padding:9px 10px;border-bottom:1px solid #e6ecf1;vertical-align:top}
+.tl-etap{background:#eef3f7;color:#5b6b7a;height:24px;line-height:24px;font-size:.72rem}
+table{border-collapse:collapse;width:100%;font-size:.92rem;table-layout:fixed}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid #e6ecf1;vertical-align:top;line-height:1.45}
 th{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:#8b98a5;font-weight:600}
 tr.vol td{background:#f7f9fb}
 .pil{display:inline-block;border-radius:999px;padding:3px 10px;font-size:.72rem;color:#fff;white-space:nowrap}
 .hint{color:#6b7a8a;font-size:.88rem}
-@media(max-width:640px){.tl-lbl{width:64px;font-size:.75rem}.tl-blok{font-size:.62rem}}
+col.c1{width:27%}col.c2{width:15%}col.c3{width:15%}col.c4{width:11%}col.c5{width:32%}
+@media(max-width:700px){.tl-lbl{width:70px;font-size:.75rem}.tl-blok{font-size:.62rem}table{table-layout:auto;font-size:.85rem}th,td{padding:8px 8px}}
 </style>
 </head>
 <body>
@@ -62,7 +63,7 @@ tr.vol td{background:#f7f9fb}
 
 <div class="card">
   <h2>Per etappe</h2>
-  <table id="tab"><thead><tr><th>Etappe</th><th>Periode</th><th>Aan boord</th><th>Status</th><th>Eis / notitie</th></tr></thead><tbody></tbody></table>
+  <table id="tab"><colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup><thead><tr><th>Etappe</th><th>Periode</th><th>Aan boord</th><th>Status</th><th>Eis / notitie</th></tr></thead><tbody></tbody></table>
   <p class="hint" style="margin-bottom:0">Aanmelden is een aanvraag. Vluchten pas boeken na <em>definitieve</em> goedkeuring.</p>
 </div>
 
