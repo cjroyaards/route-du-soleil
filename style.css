@@ -158,6 +158,11 @@ tbody tr:hover td,table tr:hover td{background:#faf7f0}
 .c-rob{background:#e3f0fb;color:#1b5e9e}.c-michiel{background:#e3f6ea;color:#1c7a4a}
 .c-merijn{background:#f8e7f4;color:#8e3b7f}.c-fam{background:#fdeed5;color:#9c6512}.c-solo{background:#ececf0;color:#555}
 
+/* ---------- KLASSEMENT ---------- */
+.titel{display:inline-block;margin-left:7px;font-size:.74rem;font-weight:600;color:#7a6524;white-space:nowrap}
+tr.buiten-mededinging td{color:#98989f;font-style:italic;border-bottom:2px solid #d5d5dc}
+tr.buiten-mededinging .crew-tag{background:#f4f4f6;color:#98989f;font-style:normal}
+
 /* ---------- LOGBOEK (index) ---------- */
 .posts{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 @media(max-width:780px){.posts{grid-template-columns:1fr}}

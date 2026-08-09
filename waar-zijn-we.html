@@ -69,8 +69,9 @@
 <section id="klassement">
   <h2>Bemanningsklassement</h2>
   <p class="lede">Automatisch bijgehouden uit de boordinstrumenten (Signal K): wie maakte de langste oversteek, wie had de meeste wind? Records krijgen een 🏆. De voorbereidingstochten tellen gewoon mee — wie nu al meevaart, staat er straks bij.</p>
+  <p class="lede">Per kolom levert de nummer 1 drie punten op, de tweede twee en de derde één — en omdat afstand het zwaarst weegt, tellen de punten voor <em>mijlen totaal</em> dubbel (6/4/2). Wie in totaal de meeste punten pakt wordt <strong>🥇 Bootsman</strong>, daarna volgen <strong>🥈 Stuurmansmaat</strong> en <strong>🥉 Scheepsmaat</strong>. De schipper staat boven de streep: zijn cijfers tellen mee in de scheepstotalen, maar hij dingt niet mee.</p>
   <table id="klassementTabel">
-    <tr><th>Opstapper</th><th>Mijlen totaal</th><th>Langste non-stop</th><th>Max wind</th><th>Topsnelheid</th><th>Nachten op zee</th></tr>
+    <tr><th>Opstapper</th><th>Mijlen totaal</th><th>Langste non-stop</th><th>Max wind</th><th>Topsnelheid</th><th>Nachten op zee</th><th>Punten</th></tr>
   </table>
   <div class="demo-note" id="klassementNote" style="margin-top:16px">Zodra er opstapper-periodes zijn ingevoerd, rekent deze tabel zichzelf uit de boorddata uit: wie voer het verst, wie ving de meeste wind.</div>
 </section>
@@ -334,20 +335,45 @@
       }
 
       const namen=[...new Set(periods.flatMap(p=>p.crew))];
-      const rijen=[{naam:'Kees (schipper)',s:stats(null)}]
-        .concat(namen.map(n=>({naam:n,s:stats(periods.filter(p=>p.crew.includes(n)))})));
+      const schipper={naam:'Kees (schipper)',s:stats(null)};
+      const rijen=namen.map(n=>({naam:n,s:stats(periods.filter(p=>p.crew.includes(n))),punten:0}));
 
+      // ---- Puntentelling: per kolom 3/2/1 voor de top-3 (schipper doet niet mee) ----
+      // Mijlen tellen dubbel: 6/4/2. Wil je de weging bijstellen, pas GEWICHT aan.
+      const GEWICHT={nm:2,bestNm:1,maxWind:1,topSpd:1,nachten:1};
+      for(const k of Object.keys(GEWICHT)){
+        const waarden=[...new Set(rijen.map(r=>r.s[k]).filter(v=>v!=null&&v>0))].sort((a,b)=>b-a).slice(0,3);
+        rijen.forEach(r=>{
+          const i=waarden.indexOf(r.s[k]);
+          if(r.s[k]!=null&&r.s[k]>0&&i>=0) r.punten+=(3-i)*GEWICHT[k];
+        });
+      }
+      // sorteren op punten, bij gelijke stand op mijlen
+      rijen.sort((a,b)=>b.punten-a.punten||b.s.nm-a.s.nm);
+      // medailles: alleen bij punten > 0, gedeelde plaatsen krijgen dezelfde titel
+      const TITELS=[['🥇','Bootsman'],['🥈','Stuurmansmaat'],['🥉','Scheepsmaat']];
+      const puntNiveaus=[...new Set(rijen.map(r=>r.punten).filter(p=>p>0))].sort((a,b)=>b-a).slice(0,3);
+      rijen.forEach(r=>{
+        const i=puntNiveaus.indexOf(r.punten);
+        r.titel = (r.punten>0&&i>=0) ? TITELS[i] : null;
+      });
+
+      // records (🏆) worden alleen onder de opstappers vergeleken
       const max=k=>Math.max(...rijen.map(r=>r.s[k]??-1));
       const nl=v=>v==null?'—':v.toLocaleString('nl-NL');
-      const cel=(v,best,tekst)=>'<td>'+((v!=null&&v===best&&v>0)?'🏆 ':'')+tekst+'</td>';
+      const cel=(v,best,tekst,mee)=>'<td>'+((mee&&v!=null&&v===best&&v>0)?'🏆 ':'')+tekst+'</td>';
+      const maakRij=(r,mee)=>'<tr'+(mee?'':' class="buiten-mededinging"')+'>'+
+        '<td><span class="crew-tag c-solo">'+r.naam+'</span>'+
+          (r.titel?' <span class="titel">'+r.titel[0]+' '+r.titel[1]+'</span>':'')+'</td>'+
+        cel(r.s.nm,max('nm'),nl(r.s.nm)+' nm',mee)+
+        cel(r.s.bestNm,max('bestNm'),r.s.bestNm>0?nl(r.s.bestNm)+' nm · '+r.s.bestU+' u':'—',mee)+
+        cel(r.s.maxWind,max('maxWind'),r.s.maxWind!=null?nl(r.s.maxWind)+' kn':'—',mee)+
+        cel(r.s.topSpd,max('topSpd'),r.s.topSpd!=null?nl(r.s.topSpd)+' kn':'—',mee)+
+        cel(r.s.nachten,max('nachten'),nl(r.s.nachten),mee)+
+        '<td>'+(mee?(r.punten||0):'—')+'</td></tr>';
       const tabel=document.getElementById('klassementTabel');
-      tabel.innerHTML='<tr><th>Opstapper</th><th>Mijlen totaal</th><th>Langste non-stop</th><th>Max wind</th><th>Topsnelheid</th><th>Nachten op zee</th></tr>'+
-        rijen.map(r=>'<tr><td><span class="crew-tag c-solo">'+r.naam+'</span></td>'+
-          cel(r.s.nm,max('nm'),nl(r.s.nm)+' nm')+
-          cel(r.s.bestNm,max('bestNm'),r.s.bestNm>0?nl(r.s.bestNm)+' nm · '+r.s.bestU+' u':'—')+
-          cel(r.s.maxWind,max('maxWind'),r.s.maxWind!=null?nl(r.s.maxWind)+' kn':'—')+
-          cel(r.s.topSpd,max('topSpd'),r.s.topSpd!=null?nl(r.s.topSpd)+' kn':'—')+
-          cel(r.s.nachten,max('nachten'),nl(r.s.nachten))+'</tr>').join('');
+      tabel.innerHTML='<tr><th>Opstapper</th><th>Mijlen totaal</th><th>Langste non-stop</th><th>Max wind</th><th>Topsnelheid</th><th>Nachten op zee</th><th>Punten</th></tr>'+
+        maakRij(schipper,false)+rijen.map(r=>maakRij(r,true)).join('');
       const kn=document.getElementById('klassementNote');
       if(kn) kn.style.display='none';
     }catch(e){ console.warn('klassement:',e); }
