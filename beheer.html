@@ -84,7 +84,11 @@ button{font:inherit;font-weight:600;padding:9px 16px;border:none;border-radius:9
 const OWNER='cjroyaards', REPO='route-du-soleil', BRANCH='main', PAD='data/crew.json';
 const BASE=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/`;
 const API=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PAD}`;
-const MIN_STOP_UUR=3, MIN_TOCHT_NM=1, MIN_SEG_M=150;
+// MIN_SEG_KN / MAX_SEG_UUR: een sprong tussen twee trackpunten telt alleen als varen
+// wanneer de gemiddelde snelheid erover geloofwaardig is én het tijdgat niet te groot.
+// Zonder deze grenzen wordt een gat in de logging (bv. 's nachts stil in de haven en
+// daarna verhaald) gezien als één lange tocht die op de vorige dag begint.
+const MIN_STOP_UUR=3, MIN_TOCHT_NM=1, MIN_SEG_M=150, MIN_SEG_KN=0.5, MAX_SEG_UUR=3;
 
 let periodes=[], bekenden=[], tochten=[];
 
@@ -131,9 +135,10 @@ function detecteerTochten(pts){
   const segs=[];
   for(let i=1;i<pts.length;i++){
     const nm=havNm(pts[i-1],pts[i]);
-    if(nm*1852>MIN_SEG_M){
-      segs.push({van:new Date(pts[i-1][2]).getTime(), tot:new Date(pts[i][2]).getTime(), nm,
-                 start:pts[i-1], eind:pts[i]});
+    const van=new Date(pts[i-1][2]).getTime(), tot=new Date(pts[i][2]).getTime();
+    const uren=(tot-van)/3600000;
+    if(nm*1852>MIN_SEG_M && uren>0 && uren<=MAX_SEG_UUR && nm/uren>=MIN_SEG_KN){
+      segs.push({van, tot, nm, start:pts[i-1], eind:pts[i]});
     }
   }
   const out=[];
