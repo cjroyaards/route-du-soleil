@@ -360,7 +360,9 @@
         for(const h of hours){
           const t=new Date(h[0]).getTime();
           if(!inP(t,ps)){ curNm=0;curU=0; continue; }
-          if(h[4]!=null&&(maxWind==null||h[4]>maxWind)) maxWind=h[4];
+          // Max wind telt alleen in uren waarin er gevaren is (max SOG ≥ 2 kn) — niet in de haven.
+          const bewogen=h[2]!=null&&h[2]>=2;
+          if(bewogen&&h[4]!=null&&(maxWind==null||h[4]>maxWind)) maxWind=h[4];
           if(h[2]!=null&&(topSpd==null||h[2]>topSpd)) topSpd=h[2];
           const varend=h[1]!=null&&h[1]>=2;
           if(varend){ curU++; curNm+=h[1]; if(curNm>bestNm){bestNm=curNm;bestU=curU;} }
